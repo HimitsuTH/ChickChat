@@ -1,11 +1,17 @@
-import express, { Express, Request, Response } from "express";
+import express from "express";
+
+import {
+  getUsers,
+  register,
+  login,
+  findUser,
+} from "../Controllers/userControllers";
 
 const router = express.Router();
 
-router.get("/", (req: Request, res: Response) => {
+router.get("/", getUsers);
+router.post("/register", register);
+router.post("/login", login);
+router.get("/:id", findUser);
 
-    res.send("Hello, User");
-});
-
-
-export default router 
+export default router;
