@@ -22,7 +22,6 @@ const Register = () => {
           <CardTitle className=" text-center">Sign Up</CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4">
-          
           <form>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
@@ -45,15 +44,17 @@ const Register = () => {
           </form>
           <div className="mt-2 text-center">
             <Label>
-                Already exists?
-              <Link to={"/auth/"} className=" cursor-pointer text-blue-500"> SignIn now</Link>
+              Already exists?
+              <Link to={"/auth/"} className=" cursor-pointer text-blue-500">
+                {" "}
+                SignIn now
+              </Link>
             </Label>
           </div>
         </CardContent>
         <CardFooter className="flex justify-end items-center">
-          <Button>Sign up</Button>  
+          <Button>Sign up</Button>
         </CardFooter>
-        
       </Card>
     </div>
   );

@@ -52,7 +52,7 @@ export const login = async (
     });
 
     if (!user) {
-      res.status(500).send("Email has already exist.");
+      res.status(500).send("This email doesn't exist.");
     } else {
       //do something...
       const checkPassword = await comparePassword(password, user.password);
@@ -82,20 +82,18 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const findUser = async (req: Request, res: Response) => {
   const { id } = req.params;
-  try{
+  try {
     const user = await prisma.users.findUnique({
       where: {
-        id
-      }
-    })
-    if(!user) {
-      res.status(404).send("User not founded.")
+        id,
+      },
+    });
+    if (!user) {
+      res.status(404).send("User not founded.");
       return;
     }
     res.status(200).json(user);
-    
-  }catch(err){
+  } catch (err) {
     res.sendStatus(500);
   }
-
 };
