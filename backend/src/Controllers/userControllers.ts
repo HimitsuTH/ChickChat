@@ -56,7 +56,7 @@ export const login = async (
     });
 
     if (!user) {
-      const error: ResponseError = new Error("User not founded.");
+      const error: ResponseError = new Error("Email not founded.");
       error.field = "email";
       error.statusCode = 400;
       throw error;
