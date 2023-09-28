@@ -10,6 +10,7 @@ type Register = {
 };
 interface ResponseError extends Error {
   statusCode?: number;
+  field?: string;
 }
 
 const prisma = new PrismaClient();
@@ -56,7 +57,7 @@ export const login = async (
 
     if (!user) {
       const error: ResponseError = new Error("User not founded.");
-      // console.log(error);
+      error.field = "email";
       error.statusCode = 400;
       throw error;
     } else {
@@ -64,8 +65,12 @@ export const login = async (
       const checkPassword = await comparePassword(password, user.password);
 
       if (!checkPassword) {
-        res.status(500).json({ error: "password not match." });
-        return;
+        const error: ResponseError = new Error(
+          "The password is incorrect. Try again."
+        );
+        error.field = "password";
+        error.statusCode = 500;
+        throw error;
       }
 
       res.status(200).json(user);
