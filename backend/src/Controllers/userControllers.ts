@@ -25,7 +25,10 @@ export const register = async (req: Request, res: Response) => {
     });
 
     if (existEmail) {
-      res.status(500).send("Email has already exist.");
+      const error: ResponseError = new Error("Email has already exist.");
+      error.field = "email";
+      error.statusCode = 400;
+      throw error;
     } else {
       const hashPassword = await encryptPassword(password);
 
@@ -37,7 +40,7 @@ export const register = async (req: Request, res: Response) => {
         },
       });
 
-      res.json(user).status(201);
+      res.status(201).json(user);
     }
   } catch (err) {
     res.status(500).json(err);
@@ -58,7 +61,7 @@ export const login = async (
     if (!user) {
       const error: ResponseError = new Error("Email not founded.");
       error.field = "email";
-      error.statusCode = 400;
+      error.statusCode = 404;
       throw error;
     } else {
       //do something...
@@ -83,8 +86,6 @@ export const login = async (
 export const getUsers = async (req: Request, res: Response) => {
   try {
     const user = await prisma.users.findMany();
-    // console.log(user);
-
     res.send(user).status(200);
   } catch (err) {
     res.sendStatus(500);
@@ -100,8 +101,14 @@ export const findUser = async (req: Request, res: Response) => {
       },
     });
     if (!user) {
-      res.status(404).send("User not founded.");
-      return;
+  
+
+      const error: ResponseError = new Error(
+        "User not founded."
+      );
+      error.field = "not found";
+      error.statusCode = 404;
+      throw error;
     }
     res.status(200).json(user);
   } catch (err) {
