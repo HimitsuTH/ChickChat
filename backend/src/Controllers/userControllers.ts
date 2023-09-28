@@ -36,7 +36,7 @@ export const register = async (req: Request, res: Response) => {
       res.json(user).status(201);
     }
   } catch (err) {
-    res.sendStatus(500);
+    res.status(500).json(err);
   }
 };
 
@@ -65,7 +65,7 @@ export const login = async (
       res.status(200).json(user);
     }
   } catch (err) {
-    res.sendStatus(500);
+    res.status(500).json(err);
   }
 };
 
@@ -94,6 +94,6 @@ export const findUser = async (req: Request, res: Response) => {
     }
     res.status(200).json(user);
   } catch (err) {
-    res.sendStatus(500);
+    res.status(500).json(err);
   }
 };
