@@ -46,13 +46,18 @@ const Register = () => {
             <Label>
               Already exists?
               <Link to={"/auth/"} className=" cursor-pointer text-blue-500">
-                {" "}
-                SignIn now
+                Signin now
               </Link>
             </Label>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end items-center">
+        <CardFooter className="flex justify-between items-center">
+          <Link to={"/"}>
+            <Button className=" bg-white text-black hover:text-white border">
+              back
+            </Button>
+          </Link>
+
           <Button>Sign up</Button>
         </CardFooter>
       </Card>
