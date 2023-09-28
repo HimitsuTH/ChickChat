@@ -1,4 +1,5 @@
 import express, { Express, Request, Response } from "express";
+import errorHandler from './middleware/errorHandler' 
 import dotenv from "dotenv";
 import cors from 'cors'
 
@@ -12,6 +13,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
 
+
 import userRouter from "./router/user";
 
 app.get("/", (req: Request, res: Response) => {
@@ -19,6 +21,10 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/user", userRouter);
+
+
+
+app.use(errorHandler)
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is running at http://localhost:${port}`);

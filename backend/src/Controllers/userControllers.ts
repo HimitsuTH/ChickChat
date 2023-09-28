@@ -8,6 +8,9 @@ type Register = {
   username: string;
   password: string;
 };
+interface ResponseError extends Error {
+  statusCode?: number;
+}
 
 const prisma = new PrismaClient();
 
@@ -52,7 +55,10 @@ export const login = async (
     });
 
     if (!user) {
-      res.status(500).send("This email doesn't exist.");
+      const error: ResponseError = new Error("User not founded.");
+      // console.log(error);
+      error.statusCode = 400;
+      throw error;
     } else {
       //do something...
       const checkPassword = await comparePassword(password, user.password);
@@ -65,7 +71,7 @@ export const login = async (
       res.status(200).json(user);
     }
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 };
 
