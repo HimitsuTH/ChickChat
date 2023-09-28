@@ -7,7 +7,8 @@ import { useForm } from "react-hook-form";
 import { signInSchema, TSignInSchema } from "@/lib/types";
 
 //@axios
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+
 import { baseUrl } from "@/lib/servies";
 
 //@zod
@@ -27,8 +28,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 //@react-router-dom
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
+type ErrorData = {
+  field: "email" | "password";
+  statusCode: number;
+  message: string;
+};
 
 const Login = () => {
   const {
@@ -41,6 +47,8 @@ const Login = () => {
     resolver: zodResolver(signInSchema),
   });
 
+  const navigate = useNavigate();
+
   const onSubmit = async (body: TSignInSchema) => {
     const { password } = body;
     if (password === "") {
@@ -50,29 +58,23 @@ const Login = () => {
       return;
     }
     try {
-      const response = await axios.post(
-        `${baseUrl}/user/login`,
-        body
-      );
+      const res = await axios.post(`${baseUrl}/user/login`, body);
 
-      // const data = response.data;
+      console.log(res);
 
-   
-      if (response.status  >= 200 && response.status < 300 ) {
-        // response status is not 2xx
-        alert("Submitting form failed!");
-        return;
+      reset();
+    } catch (errors) {
+      const err = errors as AxiosError;
+      if (axios.isAxiosError(err)) {
+        if (err.response) {
+          const errorData: ErrorData = err?.response.data as ErrorData;
+
+          setError(errorData.field, {
+            message: errorData.message,
+          });
+        }
       }
-    
-      console.log(response);
-    } catch (err) {
-      console.log(err);
     }
-
-    // console.log(data);
-    // await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    reset();
   };
 
   return (
@@ -129,11 +131,10 @@ const Login = () => {
               </div>
             </div>
             <div className="flex justify-between items-center mt-4">
-              <Link to={"/"}>
-                <Button className=" bg-white text-black hover:text-white border">
-                  back
-                </Button>
-              </Link>
+              <Button className=" bg-white text-black hover:text-white border" onClick={()=> navigate(-1)}>
+                back
+              </Button>
+
               <Button disabled={isSubmitting} type="submit">
                 {isSubmitting ? "loading..." : "Login"}
               </Button>
@@ -142,7 +143,7 @@ const Login = () => {
         </CardContent>
         <CardFooter className="flex justify-center items-center">
           {/* @Not a member */}
-          <div className="mt-2 text-center">
+          <>
             <Label>
               Not a member?
               <Link
@@ -152,7 +153,7 @@ const Login = () => {
                 Signup now
               </Link>
             </Label>
-          </div>
+          </>
         </CardFooter>
       </Card>
     </div>

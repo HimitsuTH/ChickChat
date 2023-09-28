@@ -11,6 +11,11 @@ function App() {
               Login
             </Button>
           </Link>
+          <Link to={"/auth/register"}>
+            <Button className=" bg-white text-black hover:text-white border">
+              Sign up
+            </Button>
+          </Link>
 
         </div>
       </div>
