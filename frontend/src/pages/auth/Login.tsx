@@ -7,9 +7,9 @@ import { useForm } from "react-hook-form";
 import { signInSchema, TSignInSchema } from "@/lib/types";
 
 //@axios
-import axios, { AxiosError } from "axios";
+// import axios, { AxiosError } from "axios";
 
-import { baseUrl } from "@/lib/servies";
+// import { baseUrl } from "@/lib/service";
 
 //@zod
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,13 +30,12 @@ import { Label } from "@/components/ui/label";
 //@react-router-dom
 import { Link, useNavigate } from "react-router-dom";
 
-type ErrorData = {
-  field: "email" | "password";
-  statusCode: number;
-  message: string;
-};
+import { useAuth } from "@/context/AuthContext";
+
 
 const Login = () => {
+  const { login } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -49,7 +48,7 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const onSubmit = async (body: TSignInSchema) => {
+  const onSubmit = (body: TSignInSchema) => {
     const { password } = body;
     if (password === "") {
       setError("password", {
@@ -57,24 +56,13 @@ const Login = () => {
       });
       return;
     }
-    try {
-      const res = await axios.post(`${baseUrl}/user/login`, body);
-
-      console.log(res);
-
-      reset();
-    } catch (errors) {
-      const err = errors as AxiosError;
-      if (axios.isAxiosError(err)) {
-        if (err.response) {
-          const errorData: ErrorData = err?.response.data as ErrorData;
-
-          setError(errorData.field, {
-            message: errorData.message,
-          });
-        }
-      }
+    try{
+      login(body, setError,reset,navigate);
+   
+    }catch(err){
+      console.log(err)
     }
+
   };
 
   return (
@@ -131,7 +119,10 @@ const Login = () => {
               </div>
             </div>
             <div className="flex justify-between items-center mt-4">
-              <Button className=" bg-white text-black hover:text-white border" onClick={()=> navigate(-1)}>
+              <Button
+                className=" bg-white text-black hover:text-white border"
+                onClick={() => navigate(-1)}
+              >
                 back
               </Button>
 

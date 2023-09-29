@@ -10,7 +10,7 @@ import { signUpSchema, TSignUpSchema } from "@/lib/types";
 //@axios
 import axios, { AxiosError } from "axios";
 
-import { baseUrl } from "@/lib/servies";
+import { baseUrl } from "@/lib/service";
 
 //@zod
 import { zodResolver } from "@hookform/resolvers/zod";
