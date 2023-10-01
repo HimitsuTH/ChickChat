@@ -15,12 +15,16 @@ app.use(express.urlencoded({ extended: false }));
 
 
 import userRouter from "./router/user";
+import chatRouter from "./router/chat"
+import messageRouter from "./router/message"
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });
 
 app.use("/user", userRouter);
+app.use("/chat", chatRouter);
+app.use("/message", messageRouter);
 
 
 

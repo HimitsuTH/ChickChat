@@ -7,28 +7,26 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url= env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
-
 model Users {
-  id String @id @default(uuid())
-  username String
-  email String @unique
-  password String
-  createdAt DateTime @default(now())
-  update DateTime @updatedAt
+  id        String   @id @default(uuid())
+  username  String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  update    DateTime @updatedAt
 }
 
 model Chat {
-  id Int @id @default(autoincrement())
-  members Participant[]
-  createdAt DateTime @default(now())
-  update DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  members   Member[]
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  update    DateTime @updatedAt
 }
 
-
-model Participant {
+model Member {
   id     Int    @id @default(autoincrement())
   chat   Chat   @relation(fields: [chatId], references: [id])
   chatId Int
@@ -36,10 +34,10 @@ model Participant {
 }
 
 model Message {
-  id       Int      @id @default(autoincrement())
-  chatId   Int
-  senderId String
-  text String 
-  createdAt DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  chatId    Int
+  senderId  String
+  text      String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
   updatedAt DateTime @updatedAt
 }

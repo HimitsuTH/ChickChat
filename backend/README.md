@@ -17,6 +17,6 @@
 
 ```
 
-    DATABASE_URL="{SQL}://root@localhost:{port}/database"
+    DATABASE_URL="{Server}://root@localhost:{port}/{database name}"
 
 ```

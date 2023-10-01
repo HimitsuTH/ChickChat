@@ -10,6 +10,8 @@ export default (err: errorData,req: Request,res: Response,next: NextFunction
 ) => {
   const statusCode = err.statusCode || 500;
 
+
+
   res.status(statusCode).json({
     statusCode: statusCode,
     field: err.field,

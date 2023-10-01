@@ -32,7 +32,7 @@ export const register = async (req: Request, res: Response) => {
     } else {
       const hashPassword = await encryptPassword(password);
 
-      const user = await prisma.users.create({
+      await prisma.users.create({
         data: {
           email,
           username,
@@ -40,7 +40,7 @@ export const register = async (req: Request, res: Response) => {
         },
       });
 
-      res.status(201).json(user);
+      res.status(201).send("Register successfully.");
     }
   } catch (err) {
     res.status(500).json(err);
@@ -101,11 +101,7 @@ export const findUser = async (req: Request, res: Response) => {
       },
     });
     if (!user) {
-  
-
-      const error: ResponseError = new Error(
-        "User not founded."
-      );
+      const error: ResponseError = new Error("User not founded.");
       error.field = "not found";
       error.statusCode = 404;
       throw error;
