@@ -3,7 +3,7 @@ import {z} from 'zod'
 export const signUpSchema = z.object({
     email: z.string().email(),
     username: z.string(),
-    password: z.string().min(6, "Password must be least 10 characters."),
+    password: z.string().min(6, "Password must be least 6 characters."),
     confirmPassword: z.string(),
 }).refine((data)=> data.password === data.confirmPassword, {
     message: "Password must match",

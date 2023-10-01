@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ErrorPage() {
   const error = useRouteError() as Error;
-  console.error(error);
+  // console.error(error);
 
   return (
     <div id="error-page" className="grid h-screen place-items-center">

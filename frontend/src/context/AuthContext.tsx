@@ -1,10 +1,16 @@
 // AuthContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
 import { baseUrl } from "@/lib/service";
 import axios, { AxiosError } from "axios";
 import { NavigateFunction } from "react-router-dom";
 
-import { TSignInSchema } from "@/lib/types";
+import { TSignInSchema, TSignUpSchema } from "@/lib/types";
 
 import { UseFormSetError, UseFormReset } from "react-hook-form";
 
@@ -23,16 +29,17 @@ type ErrorData = {
 export type SetError = {
   setError: () => void;
 };
-type TLogin = (
-  userData: TUser,
-  setError: UseFormSetError<TSignInSchema>,
-  reset: UseFormReset<TSignInSchema>,
+type TAuth = (
+  body: TUser,
+  setError: UseFormSetError<TSignInSchema> | UseFormSetError<TSignUpSchema>,
+  reset: UseFormReset<TSignInSchema> | UseFormReset<TSignUpSchema>,
   navigate: NavigateFunction
 ) => void;
 
 interface AuthContextType {
   user: TUser | null;
-  login: TLogin;
+  login: TAuth;
+  registerUser: TAuth;
   logout: () => void;
 }
 
@@ -41,11 +48,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<TUser | null>(() => {
     const saveItem = localStorage.getItem("user");
-    const UserInfo = saveItem ? (JSON.parse(saveItem) as TUser) : null;
+    const UserInfo = saveItem ? JSON.parse(saveItem) : null;
     return UserInfo;
   });
 
-  const login:TLogin = async (body, setError, reset, navigate ) => {
+  const login: TAuth = useCallback(async (body, setError, reset, navigate) => {
     try {
       const res = await axios.post(`${baseUrl}/user/login`, body);
       setUser(res.data);
@@ -64,15 +71,44 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
         }
       }
     }
-  };
+  }, []);
+  const registerUser: TAuth = useCallback(
+    async (body, setError, reset, navigate) => {
+      try {
+        const res = await axios.post(`${baseUrl}/user/register`, body);
+
+        if (res.status === 201) {
+          alert("Register successfully.");
+          navigate("/auth");
+        }
+        // localStorage.setItem("user", JSON.stringify(res.data));
+        navigate("/auth");
+        reset();
+      } catch (errors) {
+        const err = errors as AxiosError;
+        console.log(err);
+        if (axios.isAxiosError(err)) {
+          if (err.response) {
+            const errorData: ErrorData = err?.response.data as ErrorData;
+
+            setError(errorData.field, {
+              message: errorData.message,
+            });
+          }
+        }
+      }
+    },
+    []
+  );
 
   const logout = () => {
     localStorage.removeItem("user");
+
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, registerUser }}>
       {children}
     </AuthContext.Provider>
   );

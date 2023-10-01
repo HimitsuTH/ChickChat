@@ -7,14 +7,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { signUpSchema, TSignUpSchema } from "@/lib/types";
 
-//@axios
-import axios, { AxiosError } from "axios";
-
-import { baseUrl } from "@/lib/service";
-
 //@zod
 import { zodResolver } from "@hookform/resolvers/zod";
 
+//@shadcn
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -26,7 +22,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { useAuth } from "@/context/AuthContext";
+
 const Register = () => {
+  const { registerUser } = useAuth();
   const {
     register,
     handleSubmit,
@@ -53,17 +52,19 @@ const Register = () => {
         username: body.username,
         password: body.password,
       };
-      const res = await axios.post(`${baseUrl}/user/register`, sendData);
-      if (res.status === 201) {
-        alert("Register successfully.");
-        navigate("/auth");
-      }
-      console.log(res);
 
-      reset();
+      registerUser(sendData, setError, reset, navigate);
+
+      // const res = await axios.post(`${baseUrl}/user/register`, sendData);
+      // if (res.status === 201) {
+      //   alert("Register successfully.");
+      //   navigate("/auth");
+      // }
+      // console.log(res);
+
+      // reset();
     } catch (errors) {
-      const err = errors as AxiosError;
-      console.log(err);
+      console.log(errors);
     }
   };
   return (
@@ -95,21 +96,25 @@ const Register = () => {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input {...register("password")} id="password" />
+                <Input {...register("password")} id="password"  type="password"/>
                 {errors.password && (
                   <p className="text-red-500">{`${errors.password.message}`}</p>
                 )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input {...register("confirmPassword")} id="confirmPassword" />
+                <Input {...register("confirmPassword")} id="confirmPassword" type="password" />
                 {errors.confirmPassword && (
                   <p className="text-red-500">{`${errors.confirmPassword.message}`}</p>
                 )}
               </div>
             </div>
             <div className="flex justify-between items-center mt-4">
-              <Button className=" bg-white text-black hover:text-white border" onClick={()=> navigate((-1))}>
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => navigate(-1)}
+              >
                 back
               </Button>
 

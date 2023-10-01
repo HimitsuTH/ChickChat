@@ -32,7 +32,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useAuth } from "@/context/AuthContext";
 
-
 const Login = () => {
   const { login } = useAuth();
 
@@ -56,13 +55,11 @@ const Login = () => {
       });
       return;
     }
-    try{
-      login(body, setError,reset,navigate);
-   
-    }catch(err){
-      console.log(err)
+    try {
+      login(body, setError, reset, navigate);
+    } catch (err) {
+      console.log(err);
     }
-
   };
 
   return (
@@ -119,13 +116,9 @@ const Login = () => {
               </div>
             </div>
             <div className="flex justify-between items-center mt-4">
-              <Button
-                className=" bg-white text-black hover:text-white border"
-                onClick={() => navigate(-1)}
-              >
+            <Button variant="outline" type="button" onClick={()=>navigate(-1)}>
                 back
               </Button>
-
               <Button disabled={isSubmitting} type="submit">
                 {isSubmitting ? "loading..." : "Login"}
               </Button>
