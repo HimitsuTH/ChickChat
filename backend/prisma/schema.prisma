@@ -20,7 +20,7 @@ model Users {
 }
 
 model Chat {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   members   Member[]
   createdAt DateTime @default(now()) @db.Timestamp(6)
   update    DateTime @updatedAt
@@ -29,13 +29,13 @@ model Chat {
 model Member {
   id     Int    @id @default(autoincrement())
   chat   Chat   @relation(fields: [chatId], references: [id])
-  chatId Int
+  chatId String
   userId String
 }
 
 model Message {
   id        Int      @id @default(autoincrement())
-  chatId    Int
+  chatId    String
   senderId  String
   text      String
   createdAt DateTime @default(now()) @db.Timestamp(6)

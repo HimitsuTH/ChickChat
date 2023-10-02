@@ -36,7 +36,7 @@ export const getMessage = async (
   try {
     const message = await prisma.message.findMany({
       where: {
-        chatId: parseInt(chatId),
+        chatId: chatId,
       },
     });
 
