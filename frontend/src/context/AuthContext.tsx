@@ -14,7 +14,8 @@ import { TSignInSchema, TSignUpSchema } from "@/lib/types";
 
 import { UseFormSetError, UseFormReset } from "react-hook-form";
 
-interface TUser {
+export interface TUser {
+  id?: string 
   username?: string;
   email?: string;
   password?: string;

@@ -1,14 +1,19 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
+import { ChatContextProvider } from "./context/ChatContext";
+
 import { ProtectedRoute } from "./pages/ProtectedRoute";
 
 import { Index as AuthPage } from "./pages/auth/Index";
+
+import { Index as ChatPage } from "./components/chat/Index";
 
 import Chat from "./pages/Chat";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ErrorPage from "./pages/ErrorPages";
 import Home from "./pages/Home";
+import ChatBox from "./components/chat/ChatBox";
 
 const Routes = () => {
   const { user } = useAuth();
@@ -38,15 +43,28 @@ const Routes = () => {
         {
           path: "/",
           element: <Chat />,
+          children:[
+            {
+              path:"/",
+              element: <ChatPage/>,
+              children: [
+                {
+                  path: "/",
+                  element: <div className=" flex-1 bg-white ml-2 h-full shadow rounded">Test</div>
+                },
+                {
+                  path:"/:chatId",
+                  element:<ChatBox/>
+                }
+              ]
+            },  
+            {
+              path: "/profile",
+              element: <div className=" bg-white mt-2 h-full grid place-items-center">User Profile</div>,
+            }
+          ]
         },
-        {
-          path: "/profile",
-          element: <div>User Profile</div>,
-        },
-        {
-          path: "/logout",
-          element: <div>Logout</div>,
-        },
+      
       ],
     },
   ];
@@ -83,7 +101,11 @@ const Routes = () => {
   ]);
 
   // Provide the router configuration using RouterProvider
-  return <RouterProvider router={router} />;
+  return (
+    <ChatContextProvider user={user}>
+      <RouterProvider router={router} />
+    </ChatContextProvider>
+  );
 };
 
 export default Routes;
