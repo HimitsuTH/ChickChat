@@ -49,6 +49,10 @@ export const createChat = async (
           create: [{ userId: firstId }, { userId: secondId }],
         },
       },
+      include: {
+        members: true
+      }
+      ,
     });
     res.status(200).json(chatBox);
   } catch (err) {
