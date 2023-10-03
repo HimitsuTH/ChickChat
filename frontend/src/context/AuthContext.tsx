@@ -44,13 +44,13 @@ interface AuthContextType {
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<TUser | null>(() => {
     const saveItem = localStorage.getItem("user");
     const UserInfo = saveItem ? JSON.parse(saveItem) : null;
-    return UserInfo;
+    return UserInfo ;
   });
 
   const login: TAuth = useCallback(async (body, setError, reset, navigate) => {
@@ -117,7 +117,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (context === null) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;

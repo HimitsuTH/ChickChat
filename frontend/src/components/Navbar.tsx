@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "@/context/AuthContext";
-import { Link } from "react-router-dom";
+import { useChat } from "@/context/ChatContext";
+import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +15,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { getCurrentChat } = useChat();
+  const navigate = useNavigate();
   return (
     <nav className="flex justify-between gap-x-2 py-2 px-10 bg-white shadow items-center">
-      <h1 className=" cursor-pointer font-extrabold text-xl  p-2 ">
+      <h1
+        className=" cursor-pointer font-extrabold text-xl  p-2 "
+        onClick={() => {
+          getCurrentChat(null);
+          navigate("/");
+        }}
+      >
         ChickChat
       </h1>
       <div className="">
@@ -36,8 +45,13 @@ const Navbar = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Profile</DropdownMenuItem>
-            <Link to={"/auth"} onClick={() => logout()} >
-              <DropdownMenuItem className=" cursor-pointer">Logout</DropdownMenuItem>
+            <Link to={"/auth"} onClick={() => {
+              getCurrentChat(null);
+              logout() 
+            }}>
+              <DropdownMenuItem className=" cursor-pointer">
+                Logout
+              </DropdownMenuItem>
             </Link>
           </DropdownMenuContent>
         </DropdownMenu>

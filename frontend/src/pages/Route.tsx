@@ -1,7 +1,8 @@
-import { useRouteError, Link } from "react-router-dom";
+import { useRouteError, Link, Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 
-export default function ErrorPage() {
+export const ErrorPage = () => {
   const error = useRouteError() as Error;
   // console.error(error);
 
@@ -15,10 +16,18 @@ export default function ErrorPage() {
             {(error as { statusText?: string })?.statusText || error.message}
           </i>
         </p>
-        <Button className=" mt-5">
-          <Link to={`/`}>Back</Link>
-        </Button>
+        <Link to={`/`}>
+          <Button className=" mt-5">Back</Button>
+        </Link>
       </div>
     </div>
   );
-}
+};
+
+export const ProtectedRoute = () => {
+  const { user } = useAuth();
+  if (!user) {
+    return <Navigate to="/" />;
+  }
+  return <Outlet />;
+};

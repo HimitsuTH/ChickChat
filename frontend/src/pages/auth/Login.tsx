@@ -116,7 +116,7 @@ const Login = () => {
               </div>
             </div>
             <div className="flex justify-between items-center mt-4">
-            <Button variant="outline" type="button" onClick={()=>navigate(-1)}>
+            <Button variant="outline" type="button" onClick={()=>navigate("/")}>
                 back
               </Button>
               <Button disabled={isSubmitting} type="submit">
