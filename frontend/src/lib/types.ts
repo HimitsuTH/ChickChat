@@ -16,7 +16,12 @@ export const signInSchema = z.object({
 
 })
 
+export const sendMessage = z.object({
+    text: z.string()
+})
+
 export type TSignInSchema = z.infer<typeof signInSchema>;
 export type TSignUpSchema = z.infer<typeof signUpSchema>;
+export type TSendMessage = z.infer<typeof sendMessage>;
 
 

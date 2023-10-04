@@ -14,15 +14,24 @@ export interface TUserChat {
   id: number;
   members: { userId: string }[];
 }
+export interface TMessage {
+  chatId: string;
+  senderId: string;
+  text: string;
+  createdAt: string;
+}
 
 interface ChatContextType {
   user: TUser | null;
   userChats: TUserChat[];
   currentChat: TUserChat | null;
-  potentialChat: TUser[];
   uLoading: boolean;
+  potentialChat: TUser[];
+  messages: TMessage[];
+  messageLoading: boolean;
   getCurrentChat: (chat: TUserChat | null) => void;
   createChat: (firstId: string, secondId: string) => void;
+  createMessage: (senderId: TUser, text: string, chat: TUserChat) => void;
 }
 
 const ChatContext = createContext<ChatContextType | null>(null);
@@ -33,9 +42,19 @@ export const ChatContextProvider: React.FC<{
 }> = ({ children, user }) => {
   const [userChats, setUserChats] = useState<TUserChat[]>([]);
   const [uLoading, setULoading] = useState(false);
-  const [currentChat, setCurrentChat] = useState<TUserChat | null>(null);
-  const [potentialChat, setPotentialChat] = useState<TUser[]>([]);
+  const [currentChat, setCurrentChat] = useState<TUserChat | null>(() => {
+    const saveItem = localStorage.getItem("currentChat");
+    const chatInfo = saveItem ? JSON.parse(saveItem) : null;
+    return chatInfo;
+  });
 
+  const [potentialChat, setPotentialChat] = useState<TUser[]>([]);
+  const [messages, setMessages] = useState<TMessage[]>([]);
+  const [messageLoading, setMessageLoading] = useState(false);
+  // const [messageError , setMessageError] = useState(null);
+
+
+  //@Create Chat
   const createChat = useCallback(async (firstId: string, secondId: string) => {
     try {
       const res = await axios.post(`${baseUrl}/chat`, {
@@ -43,8 +62,6 @@ export const ChatContextProvider: React.FC<{
         secondId,
       });
       const data = res.data;
-
-      console.log(data)
 
       setUserChats((prevChats) => [...prevChats, data]);
     } catch (err) {
@@ -71,6 +88,7 @@ export const ChatContextProvider: React.FC<{
     getUserChat();
   }, [user]);
 
+  //Users not following
   useEffect(() => {
     const getUsers = async () => {
       try {
@@ -91,7 +109,7 @@ export const ChatContextProvider: React.FC<{
           return !isChatCreated;
         });
 
-        console.log(pChats);
+        // console.log(pChats);
 
         setPotentialChat(pChats);
       } catch (err) {
@@ -102,9 +120,49 @@ export const ChatContextProvider: React.FC<{
     getUsers();
   }, [user, userChats]);
 
+  // set current chat on Click ChatList
   const getCurrentChat = useCallback((chat: TUserChat | null) => {
+    localStorage.removeItem("currentChat");
     setCurrentChat(chat);
+    localStorage.setItem("currentChat", JSON.stringify(chat));
   }, []);
+
+
+  //@Create Message
+  const createMessage = useCallback(
+    async (user: TUser, text: string, chat: TUserChat) => {
+      try {
+        const res = await axios.post(`${baseUrl}/message`, {
+          chatId: chat?.id,
+          senderId: user.id,
+          text,
+        });
+        const message = res.data
+
+        setMessages((prev)=> [...prev, message])
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    const getMessage = async () => {
+      try {
+        setMessageLoading(true);
+        const res = await axios.get(`${baseUrl}/message/${currentChat?.id}`);
+        const message = res.data;
+
+        setMessages(message);
+
+        setMessageLoading(false);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getMessage();
+  }, [currentChat]);
 
   const chatContextValue: ChatContextType = {
     user,
@@ -114,6 +172,9 @@ export const ChatContextProvider: React.FC<{
     uLoading,
     getCurrentChat,
     createChat,
+    createMessage,
+    messageLoading,
+    messages
   };
 
   return (

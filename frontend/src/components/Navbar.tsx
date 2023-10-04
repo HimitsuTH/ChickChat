@@ -22,7 +22,7 @@ const Navbar = () => {
       <h1
         className=" cursor-pointer font-extrabold text-xl  p-2 "
         onClick={() => {
-
+          localStorage.removeItem("currentChat")
           navigate("/");
         }}
       >

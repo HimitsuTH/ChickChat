@@ -6,11 +6,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { signInSchema, TSignInSchema } from "@/lib/types";
 
-//@axios
-// import axios, { AxiosError } from "axios";
-
-// import { baseUrl } from "@/lib/service";
-
 //@zod
 import { zodResolver } from "@hookform/resolvers/zod";
 

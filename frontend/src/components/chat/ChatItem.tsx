@@ -14,7 +14,7 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
   const { user } = useAuth();
   const { getCurrentChat } = useChat();
 
-  console.log("members",chat.id, chat.members)
+  // console.log("members",chat.id, chat.members)
 
   const { recipient } = useFetchRecipient(chat, user as TUser);
 
