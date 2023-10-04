@@ -11,8 +11,9 @@ export const createMessage = async (
 ) => {
   const { chatId, senderId, text } = req.body;
 
+
   try {
-    await prisma.message.create({
+    const message = await prisma.message.create({
       data: {
         chatId: chatId,
         senderId: senderId,
@@ -20,7 +21,7 @@ export const createMessage = async (
       },
     });
 
-    res.status(200).send("Send message success.");
+    res.status(200).json(message);
   } catch (err) {
     next(err);
   }
@@ -38,9 +39,12 @@ export const getMessage = async (
       where: {
         chatId: chatId,
       },
+      orderBy: {
+        createdAt: 'asc',
+      },
     });
 
-    res.status(200).json(message)
+    res.status(200).json(message);
   } catch (err) {
     next(err);
   }
