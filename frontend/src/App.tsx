@@ -13,6 +13,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Home from "./pages/Home";
 import ChatBox from "./components/chat/ChatBox";
+import ChatMain from "./components/chat/ChatMain";
 
 const App = () => {
   const { user } = useAuth();
@@ -47,6 +48,10 @@ const App = () => {
               path: "/",
               element: <ChatPage />,
               children: [
+                {
+                  path: "/",
+                  element: <ChatMain/>
+                },
                 {
                   path: "/:chatId",
                   element: <ChatBox />,
@@ -95,7 +100,7 @@ const App = () => {
   const router = createBrowserRouter([
     ...routesForPublic,
     ...(user ? routesForAuthenticatedOnly : []),
-    ...routesForNotAuthenticatedOnly,
+    ...(!user ? routesForNotAuthenticatedOnly : []),
   ]);
 
   // Provide the router configuration using RouterProvider
