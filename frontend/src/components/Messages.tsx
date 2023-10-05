@@ -31,7 +31,7 @@ const Messages: React.FC<MessagesProps> = ({ message }) => {
           >
             <Avatar
               className={`h-8 w-8 ${
-                message.senderId == user?.id ? " ml-2" : "mr-2 border-white"
+                message.senderId == user?.id ? " ml-2" : "mr-2 "
               }`}
             >
               <AvatarImage
@@ -41,8 +41,8 @@ const Messages: React.FC<MessagesProps> = ({ message }) => {
             </Avatar>
             <p
               className={` break-all ${
-                message.senderId == user?.id && "  bg-black  text-white"
-              } p-2 bg-slate-200 rounded-xl `}
+                message.senderId == user?.id ? " bg-black  text-white" : "bg-slate-200"
+              } p-2  rounded-xl `}
             >
               {message.text}
             </p>

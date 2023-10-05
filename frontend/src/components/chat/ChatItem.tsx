@@ -24,7 +24,7 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
       onClick={() => getCurrentChat(chat)}
       className={({ isActive }: { isActive: boolean }) =>
         `${
-          isActive && " bg-slate-50 "
+          isActive && " bg-slate-200 "
         } text-center p-3 shadow m-2 flex items-center justify-start gap-x-4 cursor-pointer rounded-xl text-black`
       }
     >
