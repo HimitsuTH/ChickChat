@@ -8,7 +8,7 @@ const ChatList = () => {
   // console.log(userChats)
 
   return (
-    <aside className="w-[250px] shadow bg-white rounded overflow-y-scroll overflow-x-hidden">
+    <aside className="flex items-center md:block shadow bg-white overflow-x-scroll rounded md:overflow-y-scroll md:overflow-x-hidden md:w-[250px]">
       <h1 className="m-4 font-semibold cursor-default">Messages</h1>
       {uLoading ? (
         <div>loading...</div>

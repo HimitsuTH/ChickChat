@@ -16,6 +16,8 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
 
   // console.log("members",chat.id, chat.members)
 
+  const online = true
+
   const { recipient } = useFetchRecipient(chat, user as TUser);
 
   return (
@@ -23,7 +25,7 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
       to={`/${chat.id}`}
       onClick={() => getCurrentChat(chat)}
       className={({ isActive }: { isActive: boolean }) =>
-        `${
+        ` relative ${
           isActive && " bg-slate-200 "
         } text-center p-3 shadow m-2 flex items-center justify-start gap-x-4 cursor-pointer rounded-xl text-black`
       }
@@ -34,7 +36,10 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
       </Avatar>
       <div>
         <p>{recipient?.username}</p>
-        <p>12.13</p>
+        <p className="hidden md:block">12.13</p>
+      </div>
+      <div className=" absolute right-5 hidden md:block">
+        <p>{online ? "Online" : "Offline"}</p>
       </div>
     </NavLink>
   );
