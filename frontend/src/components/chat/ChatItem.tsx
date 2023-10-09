@@ -6,17 +6,15 @@ import userIcon from "@/assets/user.png";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { useFetchRecipient } from "@/Hook/useFetchRecipient";
+import { useFetchRecipient } from "@/hooks/useFetchRecipient";
 
 import { NavLink } from "react-router-dom";
 
 const ChatItem = ({ chat }: { chat: TUserChat }) => {
   const { user } = useAuth();
-  const { getCurrentChat } = useChat();
+  const { getCurrentChat, onlineUsers } = useChat();
 
   // console.log("members",chat.id, chat.members)
-
-  const online = true
 
   const { recipient } = useFetchRecipient(chat, user as TUser);
 
@@ -38,8 +36,15 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
         <p>{recipient?.username}</p>
         <p className="hidden md:block">12.13</p>
       </div>
-      <div className=" absolute right-5 hidden md:block">
-        <p>{online ? "Online" : "Offline"}</p>
+      <div className=" absolute right-5 hidden md:flex">
+        <p>
+          {onlineUsers?.some((user) => user?.userId === recipient?.id)
+            ? "Online"
+            : "Offline"}
+        </p>
+        <div className={`w-[10px] h-[10px] rounded-full ${onlineUsers?.some((user)=> user.userId === recipient?.id) ? "bg-green-600": " bg-gray-200"}`}/>
+
+       
       </div>
     </NavLink>
   );

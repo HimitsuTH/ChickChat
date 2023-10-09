@@ -5,7 +5,7 @@ import Messages from "../Messages";
 
 import { useAuth, TUser } from "@/context/AuthContext";
 import { useChat, TUserChat } from "@/context/ChatContext";
-import { useFetchRecipient } from "@/Hook/useFetchRecipient";
+import { useFetchRecipient } from "@/hooks/useFetchRecipient";
 
 import userIcon from "@/assets/user.png";
 
@@ -30,7 +30,7 @@ import send from "@/assets/send.png";
 
 const ChatBox = () => {
   const { user } = useAuth();
-  const { currentChat, createMessage, messages, messageLoading } = useChat();
+  const { currentChat, createMessage, messages, messageLoading , onlineUsers } = useChat();
   const { recipient } = useFetchRecipient(
     currentChat as TUserChat,
     user as TUser
@@ -40,6 +40,8 @@ const ChatBox = () => {
     resolver: zodResolver(sendMessage),
   });
 
+
+  // scroll To Bottom when user send message chat
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
@@ -72,7 +74,9 @@ const ChatBox = () => {
             </Avatar>
             <p>{recipient?.username}</p>
           </CardTitle>
-          <CardDescription>Online</CardDescription>
+          <CardDescription> {onlineUsers?.some((user) => user?.userId === recipient?.id)
+            ? "Online"
+            : "Offline"}</CardDescription>
         </CardHeader>
         <CardContent className="  bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll" ref={chatContainerRef}>
           {messageLoading ? (

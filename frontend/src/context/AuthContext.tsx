@@ -103,9 +103,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   );
 
   const logout = () => {
+    setUser(null);
     localStorage.removeItem("user");
 
-    setUser(null);
   };
 
   return (

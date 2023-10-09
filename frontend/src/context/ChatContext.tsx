@@ -1,3 +1,4 @@
+"use client";
 import React, {
   createContext,
   useState,
@@ -10,16 +11,23 @@ import { TUser } from "./AuthContext";
 import axios from "axios";
 import { baseUrl } from "@/lib/service";
 
-export interface TUserChat {
+import { io, Socket } from "socket.io-client";
+
+export type TUserChat = {
   id: number;
   members: { userId: string }[];
-}
-export interface TMessage {
+};
+export type TMessage = {
   chatId: string;
   senderId: string;
   text: string;
   createdAt: string;
-}
+};
+
+type TOnlineUsers = {
+  userId: string;
+  socketId: string;
+};
 
 interface ChatContextType {
   user: TUser | null;
@@ -29,6 +37,7 @@ interface ChatContextType {
   potentialChat: TUser[];
   messages: TMessage[];
   messageLoading: boolean;
+  onlineUsers: TOnlineUsers[] | null;
   getCurrentChat: (chat: TUserChat | null) => void;
   createChat: (firstId: string, secondId: string) => void;
   createMessage: (senderId: TUser, text: string, chat: TUserChat) => void;
@@ -50,10 +59,73 @@ export const ChatContextProvider: React.FC<{
 
   const [potentialChat, setPotentialChat] = useState<TUser[]>([]);
   const [messages, setMessages] = useState<TMessage[]>([]);
+
+  const [newMessage, setNewMessage] = useState<TMessage | null>(null);
   const [messageLoading, setMessageLoading] = useState(false);
   // const [messageError , setMessageError] = useState(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const [onlineUsers, setOnlineUsers] = useState(null);
 
+  // console.log(socket);
+  // console.log(onlineUsers);
 
+  //===========================================================
+  //@Socket.io
+  //===========================================================
+  useEffect(() => {
+    const newSocket = io("http://localhost:3000");
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+    };
+  }, [user]);
+
+  // add online users
+  useEffect(() => {
+    if (socket === null) {
+      return;
+    }
+    socket?.emit("addNewUser", user?.id);
+    socket.on("getOnlineUsers", (res) => {
+      setOnlineUsers(res);
+    });
+
+    return () => {
+      socket.off("getOnlineUsers");
+    };
+  }, [socket, user]);
+
+  //send message
+  useEffect(() => {
+    if (socket === null) return;
+
+    const recipientUser = currentChat?.members?.find(
+      (member) => member.userId !== user?.id
+    );
+
+    socket.emit("sendMessage", { ...newMessage, ...recipientUser });
+  }, [newMessage, currentChat, socket, user]);
+
+  //receive message
+  useEffect(() => {
+    if (socket === null) return;
+
+    socket.on("getMessage", (res) => {
+      if (currentChat?.id !== res.chatId) return;
+      setMessages((prev) => [...prev, res]);
+    });
+
+    return () => {
+      socket.off("getMessage");
+    };
+  }, [socket, currentChat]);
+
+  console.log(messages);
+
+  //===========================================================
+  //@Chat
+  //===========================================================
   //@Create Chat
   const createChat = useCallback(async (firstId: string, secondId: string) => {
     try {
@@ -127,7 +199,9 @@ export const ChatContextProvider: React.FC<{
     localStorage.setItem("currentChat", JSON.stringify(chat));
   }, []);
 
-
+  //===========================================================
+  //@Message
+  //===========================================================
   //@Create Message
   const createMessage = useCallback(
     async (user: TUser, text: string, chat: TUserChat) => {
@@ -137,9 +211,11 @@ export const ChatContextProvider: React.FC<{
           senderId: user.id,
           text,
         });
-        const message = res.data
+        const message = res.data;
 
-        setMessages((prev)=> [...prev, message])
+        setNewMessage(message);
+
+        setMessages((prev) => [...prev, message]);
       } catch (err) {
         console.log(err);
       }
@@ -174,7 +250,8 @@ export const ChatContextProvider: React.FC<{
     createChat,
     createMessage,
     messageLoading,
-    messages
+    messages,
+    onlineUsers,
   };
 
   return (
