@@ -28,6 +28,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import send from "@/assets/send.png";
 
+import { v4 as uuidv4 } from 'uuid';
+
 const ChatBox = () => {
   const { user } = useAuth();
   const { currentChat, createMessage, messages, messageLoading , onlineUsers } = useChat();
@@ -35,6 +37,7 @@ const ChatBox = () => {
     currentChat as TUserChat,
     user as TUser
   );
+
 
   const { register, handleSubmit, reset } = useForm<TSendMessage>({
     resolver: zodResolver(sendMessage),
@@ -78,7 +81,7 @@ const ChatBox = () => {
             ? "Online"
             : "Offline"}</CardDescription>
         </CardHeader>
-        <CardContent className="chatList bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll" ref={chatContainerRef}>
+        <CardContent className=" bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll" ref={chatContainerRef}>
           {messageLoading ? (
             <p>loading message...</p>
           ) : (
@@ -86,9 +89,9 @@ const ChatBox = () => {
               <p className=" flex justify-center items-center p-2">
                 New message
               </p>
-              {messages.map((message, i) => (
+              {messages.map((message) => (
                 <div
-                  key={`${message.senderId + i}`}
+                  key={`${uuidv4()}`}
                   className={`flex ${
                     message.senderId == user?.id && " justify-end"
                   }`}

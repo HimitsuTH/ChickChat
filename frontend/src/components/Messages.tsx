@@ -13,6 +13,8 @@ import selfIcon from "@/assets/hacker.png";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+
+
 interface MessagesProps {
   message: TMessage; // Make sure the prop name matches 'message'
 }

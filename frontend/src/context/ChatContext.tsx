@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 import React, {
   createContext,
@@ -50,6 +51,7 @@ export const ChatContextProvider: React.FC<{
   user: TUser | null;
 }> = ({ children, user }) => {
   const [userChats, setUserChats] = useState<TUserChat[]>([]);
+  const [newChat, setNewChat] = useState<TUserChat | null>(null);
   const [uLoading, setULoading] = useState(false);
   const [currentChat, setCurrentChat] = useState<TUserChat | null>(() => {
     const saveItem = localStorage.getItem("currentChat");
@@ -96,6 +98,36 @@ export const ChatContextProvider: React.FC<{
     };
   }, [socket, user]);
 
+  //send chat to update
+  useEffect(() => {
+    if (socket === null) return;
+
+    const recipientUser = newChat?.members?.find(
+      (member) => member.userId !== user?.id
+    );
+
+    if (newChat !== null) {
+      socket.emit("createChat", newChat, recipientUser);
+    }
+    setNewChat(null);
+  }, [newChat]);
+
+  // console.log(newChat)
+
+  //receive get chat
+  useEffect(() => {
+    if (socket === null) return;
+
+    socket.on("getChat", (res) => {
+      console.log(res);
+      setUserChats((prev) => [...prev, res]);
+    });
+
+    return () => {
+      socket.off("getChat");
+    };
+  }, [newChat]);
+
   //send message
   useEffect(() => {
     if (socket === null) return;
@@ -104,7 +136,12 @@ export const ChatContextProvider: React.FC<{
       (member) => member.userId !== user?.id
     );
 
-    socket.emit("sendMessage", { ...newMessage, ...recipientUser });
+
+    //check message is not null IF true `emit` data on event sendMessage
+    if (newMessage?.text) {
+      socket.emit("sendMessage", { ...newMessage, ...recipientUser });
+    }
+
   }, [newMessage, currentChat, socket, user]);
 
   //receive message
@@ -113,29 +150,34 @@ export const ChatContextProvider: React.FC<{
 
     socket.on("getMessage", (res) => {
       if (currentChat?.id !== res.chatId) return;
+
       setMessages((prev) => [...prev, res]);
     });
 
     return () => {
       socket.off("getMessage");
     };
-  }, [socket, currentChat]);
+  }, [socket, currentChat, newMessage]);
 
-  console.log(messages);
+  // console.log(messages);
+  // console.log(user);
 
   //===========================================================
   //@Chat
   //===========================================================
-  //@Create Chat
+  //Create Chat
   const createChat = useCallback(async (firstId: string, secondId: string) => {
     try {
       const res = await axios.post(`${baseUrl}/chat`, {
         firstId,
         secondId,
       });
-      const data = res.data;
+      const chat = res.data;
 
-      setUserChats((prevChats) => [...prevChats, data]);
+      // console.log(chat)
+      setNewChat(chat);
+
+      setUserChats((prevChats) => [...prevChats, chat]);
     } catch (err) {
       console.error("Error creating chat:", err);
     }
@@ -202,7 +244,7 @@ export const ChatContextProvider: React.FC<{
   //===========================================================
   //@Message
   //===========================================================
-  //@Create Message
+  //Create Message
   const createMessage = useCallback(
     async (user: TUser, text: string, chat: TUserChat) => {
       try {

@@ -79,24 +79,24 @@
 
 
 /* width */
-.chatList::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 10px;
  
 }
 
 /* Track */
-.chatList::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: #f1f1f1; 
   border-radius: 20px;
 }
  
 /* Handle */
-.chatList::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: #888; 
   border-radius: 20px;
 }
 
 /* Handle on hover */
-.chatList::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }

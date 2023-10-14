@@ -20,13 +20,20 @@ io.on("connection", (socket) => {
   });
 
   socket.on("sendMessage", (message) => {
-    //   console.log(message)
     const recipientId = message.userId;
 
     const user = onlineUsers.find((user) => user.userId === recipientId);
 
     if (user) {
       io.to(user.socketId).emit("getMessage", message);
+    }
+  });
+
+  socket.on("createChat", (chat, recipient) => {
+    const user = onlineUsers.find((user) => user.userId === recipient.userId);
+
+    if (user) {
+      io.to(user.socketId).emit("getChat", chat);
     }
   });
 
