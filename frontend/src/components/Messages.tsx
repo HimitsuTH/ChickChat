@@ -41,7 +41,9 @@ const Messages: React.FC<MessagesProps> = ({ message }) => {
             </Avatar>
             <p
               className={` break-all ${
-                message.senderId == user?.id ? " bg-black  text-white" : "bg-slate-200"
+                message.senderId == user?.id
+                  ? " bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-indigo-300 to-purple-400  text-white"
+                  : "bg-slate-200"
               } p-2  rounded-xl `}
             >
               {message.text}

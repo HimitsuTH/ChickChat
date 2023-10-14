@@ -64,7 +64,7 @@ const ChatBox = () => {
   }, [messages]);
 
   return (
-    <Card className="flex-1 bg-white ml-2 h-full shadow rounded ">
+    <Card className="flex-1 bg-white ml-2 h-full shadow ">
       <div className=" flex flex-col  h-full justify-between px-4 gap-2">
         <CardHeader className="">
           <CardTitle className=" flex gap-x-4">
@@ -78,7 +78,7 @@ const ChatBox = () => {
             ? "Online"
             : "Offline"}</CardDescription>
         </CardHeader>
-        <CardContent className="  bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll" ref={chatContainerRef}>
+        <CardContent className="chatList bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll" ref={chatContainerRef}>
           {messageLoading ? (
             <p>loading message...</p>
           ) : (

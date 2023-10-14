@@ -69,7 +69,7 @@ const Register = () => {
   };
   return (
     <div>
-      <Card className="w-[350px]">
+      <Card className="w-[350px] shadow">
         <CardHeader>
           <CardTitle className=" text-center">Sign Up</CardTitle>
         </CardHeader>

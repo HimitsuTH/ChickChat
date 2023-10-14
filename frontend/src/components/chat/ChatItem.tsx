@@ -24,27 +24,34 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
       onClick={() => getCurrentChat(chat)}
       className={({ isActive }: { isActive: boolean }) =>
         ` relative ${
-          isActive && " bg-slate-200 "
-        } text-center p-3 shadow m-2 flex items-center justify-start gap-x-4 cursor-pointer rounded-xl text-black`
+          isActive &&
+          " bg-gradient-to-r from-indigo-300 to-purple-400 text-white "
+        } text-center p-3 shadow m-2 flex items-center justify-around gap-x-4 cursor-pointer rounded-xl text-black`
       }
     >
-      <Avatar className=" h-8 w-8">
-        <AvatarImage src={userIcon} />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-      <div>
-        <p>{recipient?.username}</p>
-        <p className="hidden md:block">12.13</p>
+      <div className="flex items-center gap-x-2">
+        <Avatar className=" h-8 w-8 bg-white">
+          <AvatarImage src={userIcon} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <div>
+          <p>{recipient?.username}</p>
+          <p className="hidden md:block">12.13</p>
+        </div>
       </div>
-      <div className=" absolute right-5 hidden md:flex">
-        <p>
+      <div className="  right-5  md:flex">
+        <p className="hidden md:block">
           {onlineUsers?.some((user) => user?.userId === recipient?.id)
             ? "Online"
             : "Offline"}
         </p>
-        <div className={`w-[10px] h-[10px] rounded-full ${onlineUsers?.some((user)=> user.userId === recipient?.id) ? "bg-green-600": " bg-gray-200"}`}/>
-
-       
+        <div
+          className={`w-[10px] h-[10px] rounded-full border border-gray-500 ${
+            onlineUsers?.some((user) => user.userId === recipient?.id)
+              ? "bg-green-600"
+              : " bg-gray-200"
+          }`}
+        />
       </div>
     </NavLink>
   );
