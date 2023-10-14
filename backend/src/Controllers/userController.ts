@@ -15,7 +15,11 @@ interface ResponseError extends Error {
 
 const prisma = new PrismaClient();
 
-export const register = async (req: Request, res: Response) => {
+export const register = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { email, username, password }: Register = req.body;
 
   // console.log(email, username,password)
@@ -43,7 +47,7 @@ export const register = async (req: Request, res: Response) => {
       res.status(201).send("Register successfully.");
     }
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 };
 
@@ -83,16 +87,24 @@ export const login = async (
   }
 };
 
-export const getUsers = async (req: Request, res: Response) => {
+export const getUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = await prisma.users.findMany();
     res.send(user).status(200);
   } catch (err) {
-    res.sendStatus(500);
+    next(err);
   }
 };
 
-export const findUser = async (req: Request, res: Response) => {
+export const findUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { id } = req.params;
   try {
     const user = await prisma.users.findUnique({
@@ -108,6 +120,6 @@ export const findUser = async (req: Request, res: Response) => {
     }
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 };
