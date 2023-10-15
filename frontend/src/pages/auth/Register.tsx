@@ -131,7 +131,7 @@ const Register = () => {
               Already exists?
               <Link
                 to={"/auth/"}
-                className=" cursor-pointer text-blue-500 ml-3"
+                className=" cursor-pointer text-blue-500 ml-3 hover:underline"
               >
                 Signin now
               </Link>

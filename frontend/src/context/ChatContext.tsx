@@ -98,7 +98,7 @@ export const ChatContextProvider: React.FC<{
     };
   }, [socket, user]);
 
-  //send chat to update
+  //send create new chat to update
   useEffect(() => {
     if (socket === null) return;
 
@@ -110,7 +110,7 @@ export const ChatContextProvider: React.FC<{
       socket.emit("createChat", newChat, recipientUser);
     }
     setNewChat(null);
-  }, [newChat]);
+  }, [newChat ]);
 
   // console.log(newChat)
 
@@ -119,14 +119,14 @@ export const ChatContextProvider: React.FC<{
     if (socket === null) return;
 
     socket.on("getChat", (res) => {
-      console.log(res);
+      // console.log(res);
       setUserChats((prev) => [...prev, res]);
     });
 
     return () => {
       socket.off("getChat");
     };
-  }, [newChat]);
+  }, [newChat, socket]);
 
   //send message
   useEffect(() => {

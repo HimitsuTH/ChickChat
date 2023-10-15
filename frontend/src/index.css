@@ -81,6 +81,10 @@
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
+
+  @media (max-width: 380px) {
+    height: 5px;
+  }
  
 }
 

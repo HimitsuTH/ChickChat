@@ -127,7 +127,7 @@ const Login = () => {
               Not a member?
               <Link
                 to={"/auth/register"}
-                className=" cursor-pointer text-blue-500 ml-2"
+                className=" cursor-pointer text-blue-500 ml-2 hover:underline"
               >
                 Signup now
               </Link>
