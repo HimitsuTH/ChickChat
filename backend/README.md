@@ -8,6 +8,9 @@
     # Install dependencies
     $ npm install
 
+    # setup database
+    $ npx prisma migrate dev -name init
+
     # Run
     $ npm start
 
