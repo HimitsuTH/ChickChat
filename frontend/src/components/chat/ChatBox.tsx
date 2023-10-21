@@ -67,7 +67,7 @@ const ChatBox = () => {
   }, [messages]);
 
   return (
-    <Card className="flex-1 bg-white ml-2 h-full shadow ">
+    <Card className="flex-1 bg-white ml-2  h-full shadow-none border-none ">
       <div className=" flex flex-col  h-full justify-between px-4 gap-2">
         <CardHeader className="">
           <CardTitle className=" flex gap-x-4">

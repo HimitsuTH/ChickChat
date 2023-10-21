@@ -80,12 +80,8 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 10px;
-
-  @media (max-width: 380px) {
-    height: 5px;
-  }
- 
+  width: 6px;
+  height: 6px;
 }
 
 /* Track */

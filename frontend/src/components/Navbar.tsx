@@ -18,11 +18,11 @@ const Navbar = () => {
   const { getCurrentChat } = useChat();
   const navigate = useNavigate();
   return (
-    <nav className="flex justify-between gap-x-2 py-2 px-10 bg-white shadow items-center">
+    <nav className="flex justify-between gap-x-2 py-2 px-10 bg-white  items-center">
       <h1
-        className=" cursor-pointer font-extrabold text-xl  p-2 "
+        className=" cursor-pointer font-extrabold text-xl  p-2 select-none"
         onClick={() => {
-          localStorage.removeItem("currentChat")
+          localStorage.removeItem("currentChat");
           navigate("/");
         }}
       >
@@ -44,11 +44,16 @@ const Navbar = () => {
               My Account
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <Link to={"/auth"} onClick={() => {
-              getCurrentChat(null);
-              logout() 
-            }}>
+            <Link to={"/profile"}>
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+            </Link>
+            <Link
+              to={"/auth"}
+              onClick={() => {
+                getCurrentChat(null);
+                logout();
+              }}
+            >
               <DropdownMenuItem className=" cursor-pointer">
                 Logout
               </DropdownMenuItem>

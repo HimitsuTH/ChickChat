@@ -15,7 +15,7 @@ import { baseUrl } from "@/lib/service";
 import { io, Socket } from "socket.io-client";
 
 export type TUserChat = {
-  id: number;
+  id: number | string;
   members: { userId: string }[];
 };
 export type TMessage = {
@@ -141,6 +141,8 @@ export const ChatContextProvider: React.FC<{
     if (newMessage?.text) {
       socket.emit("sendMessage", { ...newMessage, ...recipientUser });
     }
+
+    setNewMessage(null);
 
   }, [newMessage, currentChat, socket, user]);
 
