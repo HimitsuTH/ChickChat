@@ -39,18 +39,26 @@ const Register = () => {
   const navigate = useNavigate();
 
   const onSubmit = async (body: TSignUpSchema) => {
-    const { password } = body;
-    if (password === "") {
-      setError("password", {
-        message: "Please enter you are password",
+    const { username, email, password } = body;
+    // if (password === "") {
+    //   setError("password", {
+    //     message: "Please enter your password.",
+    //   });
+    //   return;
+    // }
+
+    if (username === "") {
+      setError("username", {
+        message: "Please enter your username.",
       });
       return;
     }
+
     try {
       const sendData = {
-        email: body.email,
-        username: body.username,
-        password: body.password,
+        email: email,
+        username: username,
+        password: password,
       };
 
       registerUser(sendData, setError, reset, navigate);
@@ -96,14 +104,22 @@ const Register = () => {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input {...register("password")} id="password"  type="password"/>
+                <Input
+                  {...register("password")}
+                  id="password"
+                  type="password"
+                />
                 {errors.password && (
                   <p className="text-red-500">{`${errors.password.message}`}</p>
                 )}
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                <Input {...register("confirmPassword")} id="confirmPassword" type="password" />
+                <Input
+                  {...register("confirmPassword")}
+                  id="confirmPassword"
+                  type="password"
+                />
                 {errors.confirmPassword && (
                   <p className="text-red-500">{`${errors.confirmPassword.message}`}</p>
                 )}

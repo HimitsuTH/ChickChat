@@ -44,8 +44,8 @@ const Navbar = () => {
               My Account
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <Link to={"/profile"}>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+            <Link to={"/profile"} >
+              <DropdownMenuItem className=" cursor-pointer">Profile</DropdownMenuItem>
             </Link>
             <Link
               to={"/auth"}
