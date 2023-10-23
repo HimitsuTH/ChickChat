@@ -15,7 +15,7 @@ import { TSignInSchema, TSignUpSchema } from "@/lib/types";
 import { UseFormSetError, UseFormReset } from "react-hook-form";
 
 export interface TUser {
-  id?: string 
+  id?: string;
   username?: string;
   email?: string;
   password?: string;
@@ -50,7 +50,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<TUser | null>(() => {
     const saveItem = localStorage.getItem("user");
     const UserInfo = saveItem ? JSON.parse(saveItem) : null;
-    return UserInfo ;
+    return UserInfo;
   });
 
   const login: TAuth = useCallback(async (body, setError, reset, navigate) => {
@@ -83,7 +83,7 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
           navigate("/auth");
         }
         // localStorage.setItem("user", JSON.stringify(res.data));
-        navigate("/auth");
+
         reset();
       } catch (errors) {
         const err = errors as AxiosError;
@@ -105,7 +105,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
-
   };
 
   return (

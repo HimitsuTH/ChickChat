@@ -98,7 +98,7 @@ export const ChatContextProvider: React.FC<{
     };
   }, [socket, user]);
 
-  //send create new chat to update
+  // send create new chat for update receive Chat
   useEffect(() => {
     if (socket === null) return;
 
@@ -110,14 +110,9 @@ export const ChatContextProvider: React.FC<{
       socket.emit("createChat", newChat, recipientUser);
     }
     setNewChat(null);
-  }, [newChat ]);
 
-  // console.log(newChat)
 
-  //receive get chat
-  useEffect(() => {
-    if (socket === null) return;
-
+    //receive get chat
     socket.on("getChat", (res) => {
       // console.log(res);
       setUserChats((prev) => [...prev, res]);
@@ -128,6 +123,22 @@ export const ChatContextProvider: React.FC<{
     };
   }, [newChat, socket]);
 
+  // console.log(newChat)
+
+  //receive get chat
+  // useEffect(() => {
+  //   if (socket === null) return;
+
+  //   socket.on("getChat", (res) => {
+  //     // console.log(res);
+  //     setUserChats((prev) => [...prev, res]);
+  //   });
+
+  //   return () => {
+  //     socket.off("getChat");
+  //   };
+  // }, [newChat, socket]);
+
   //send message
   useEffect(() => {
     if (socket === null) return;
@@ -136,20 +147,13 @@ export const ChatContextProvider: React.FC<{
       (member) => member.userId !== user?.id
     );
 
-
     //check message is not null IF true `emit` data on event sendMessage
     if (newMessage?.text) {
       socket.emit("sendMessage", { ...newMessage, ...recipientUser });
+      setNewMessage(null);
     }
 
-    setNewMessage(null);
-
-  }, [newMessage, currentChat, socket, user]);
-
-  //receive message
-  useEffect(() => {
-    if (socket === null) return;
-
+    //receive message
     socket.on("getMessage", (res) => {
       if (currentChat?.id !== res.chatId) return;
 
@@ -159,7 +163,21 @@ export const ChatContextProvider: React.FC<{
     return () => {
       socket.off("getMessage");
     };
-  }, [socket, currentChat, newMessage]);
+  }, [newMessage, socket]);
+
+  // useEffect(() => {
+  //   if (socket === null) return;
+
+  //   socket.on("getMessage", (res) => {
+  //     if (currentChat?.id !== res.chatId) return;
+
+  //     setMessages((prev) => [...prev, res]);
+  //   });
+
+  //   return () => {
+  //     socket.off("getMessage");
+  //   };
+  // }, [socket, currentChat, newMessage]);
 
   // console.log(messages);
   // console.log(user);
@@ -174,11 +192,9 @@ export const ChatContextProvider: React.FC<{
         firstId,
         secondId,
       });
-      const chat = res.data;
+      const chat: TUserChat = res.data;
 
-      // console.log(chat)
       setNewChat(chat);
-
       setUserChats((prevChats) => [...prevChats, chat]);
     } catch (err) {
       console.error("Error creating chat:", err);
@@ -224,9 +240,6 @@ export const ChatContextProvider: React.FC<{
 
           return !isChatCreated;
         });
-
-        // console.log(pChats);
-
         setPotentialChat(pChats);
       } catch (err) {
         console.error("Error fetching users:", err);

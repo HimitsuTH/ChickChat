@@ -26,7 +26,7 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
         ` relative ${
           isActive &&
           " bg-gradient-to-r from-indigo-300 to-purple-400 text-white "
-        } text-center p-3 shadow m-2 flex items-center justify-around gap-x-4 cursor-pointer rounded-xl text-black`
+        } text-center p-2 shadow m-2 flex items-center justify-around gap-x-4 cursor-pointer rounded-xl text-black`
       }
     >
       <div className="flex items-center gap-x-2">
@@ -35,7 +35,7 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div>
-          <p>{recipient?.username}</p>
+          <p className="truncate ">{recipient?.username}</p>
           <p className="hidden md:block">12.13</p>
         </div>
       </div>
