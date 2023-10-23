@@ -26,21 +26,21 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
         ` relative ${
           isActive &&
           " bg-gradient-to-r from-indigo-300 to-purple-400 text-white "
-        } text-center p-2 shadow m-2 flex items-center justify-around gap-x-4 cursor-pointer rounded-xl text-black`
+        } text-center p-2 shadow m-2 flex items-center justify-around gap-x-4 cursor-pointer rounded-xl text-black `
       }
     >
-      <div className="flex items-center gap-x-2">
+      <div className="flex md:items-center gap-x-2 flex-1 ">
         <Avatar className=" h-8 w-8 bg-white">
           <AvatarImage src={userIcon} />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-        <div>
-          <p className="truncate ">{recipient?.username}</p>
+        <div className="ml-2 ">
+          <p className="truncate">{recipient?.username}</p>
           <p className="hidden md:block">12.13</p>
         </div>
       </div>
-      <div className="  right-5  md:flex">
-        <p className="hidden md:block">
+      <div className="  right-5 flex">
+        <p className="block">
           {onlineUsers?.some((user) => user?.userId === recipient?.id)
             ? "Online"
             : "Offline"}
