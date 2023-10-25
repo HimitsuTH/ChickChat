@@ -1,26 +1,33 @@
 import { Request, Response, NextFunction } from "express";
+
+import jwt from "jsonwebtoken";
+
 import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 import { encryptPassword, comparePassword } from "../service/auth.service";
 
-type Register = {
+type TUser = {
   email: string;
   username: string;
   password: string;
 };
+
+interface TRegister extends TUser {
+  password: string;
+}
+
 interface ResponseError extends Error {
   statusCode?: number;
   field?: string;
 }
-
-const prisma = new PrismaClient();
 
 export const register = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const { email, username, password }: Register = req.body;
+  const { email, username, password }: TUser = req.body;
 
   // console.log(email, username,password)
   try {
@@ -80,6 +87,22 @@ export const login = async (
         throw error;
       }
 
+      const token = jwt.sign(
+        {
+          id: user.id,
+        },
+        "https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.he0ErCNloe4J7Id0Ry2SEDg09lKkZkfsRiGsdX_vgEg",
+        {
+          expiresIn: "5 days",
+        }
+      );
+
+      const expires_in = jwt.decode(token);
+
+      console.log(token);
+
+      console.log(expires_in);
+
       res.status(200).json(user);
     }
   } catch (err) {
@@ -122,4 +145,17 @@ export const findUser = async (
   } catch (err) {
     next(err);
   }
+};
+
+export const profile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { username, email } = req.user as TUser;
+
+  res.status(200).json({
+    username,
+    email,
+  });
 };
