@@ -5,6 +5,7 @@ import React, {
   useState,
   ReactNode,
   useCallback,
+  useEffect,
 } from "react";
 import { baseUrl } from "@/lib/service";
 import axios, { AxiosError } from "axios";
@@ -13,6 +14,14 @@ import { NavigateFunction } from "react-router-dom";
 import { TSignInSchema, TSignUpSchema } from "@/lib/types";
 
 import { UseFormSetError, UseFormReset } from "react-hook-form";
+
+import authHeader from "@/lib/service";
+
+export interface TToken  {
+  token_type: string;
+  access_token: string;
+  expires_in: number;
+}
 
 export interface TUser {
   id?: string;
@@ -40,6 +49,7 @@ type TAuth = (
 interface AuthContextType {
   user: TUser | null;
   login: TAuth;
+  token: TToken | null;
   registerUser: TAuth;
   logout: () => void;
 }
@@ -53,11 +63,20 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     return UserInfo;
   });
 
+  const [token, setToken] = useState<TToken | null>(() => {
+    const saveItem = localStorage.getItem("token");
+    const _token = saveItem ? JSON.parse(saveItem) : null;
+    return _token;
+  });
+
   const login: TAuth = useCallback(async (body, setError, reset, navigate) => {
     try {
       const res = await axios.post(`${baseUrl}/user/login`, body);
-      setUser(res.data);
-      localStorage.setItem("user", JSON.stringify(res.data));
+
+      setToken(res.data);
+      localStorage.setItem("token", JSON.stringify(res?.data));
+    
+
       navigate("/");
       reset();
     } catch (errors) {
@@ -102,13 +121,36 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     []
   );
 
+  useEffect(() => {
+    const getUserInfo = async () => {
+      try {
+        if (token != null) {
+          const res = await axios.get(`${baseUrl}/user/me`, {
+            headers: authHeader(token),
+          });
+
+          const user = res.data;
+          localStorage.setItem("user", JSON.stringify(user));
+
+          setUser(user);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getUserInfo();
+  }, [token]);
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
+    setToken(null);
+    localStorage.removeItem("token");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, registerUser }}>
+    <AuthContext.Provider value={{ user, login, logout, registerUser, token }}>
       {children}
     </AuthContext.Provider>
   );

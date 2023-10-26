@@ -14,8 +14,8 @@ const ChatList = ({ isOpen }: { isOpen: boolean }) => {
       // className="fixed top-0 left-0 z-40 w-64 h-screen p-4 overflow-y-auto transition-transform"
       className={`w-[230px] absolute ${
         !isOpen && "-translate-x-full"
-      }  block  bg-white  rounded overflow-y-scroll
-      //  overflow-x-hidden md:w-[250px] md:static h-5/6 md:h-auto z-50 transition-transform md:transition-none md:translate-x-0`}
+      }  block  bg-white  rounded overflow-y-scroll 
+       overflow-x-hidden md:w-[250px] md:static h-5/6 md:h-auto z-50 transition-transform md:transition-none md:translate-x-0 `}
     >
       <h1 className="m-4 font-semibold cursor-default">Messages</h1>
 

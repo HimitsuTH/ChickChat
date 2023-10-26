@@ -56,7 +56,7 @@ const ChatMain = () => {
                         createChat(user?.id as string, p.id as string)
                       }
                     >
-                      Follow
+                      Add
                     </Button>
                   </CardFooter>
                 </Card>

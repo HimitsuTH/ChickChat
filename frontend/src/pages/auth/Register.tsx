@@ -62,22 +62,13 @@ const Register = () => {
       };
 
       registerUser(sendData, setError, reset, navigate);
-
-      // const res = await axios.post(`${baseUrl}/user/register`, sendData);
-      // if (res.status === 201) {
-      //   alert("Register successfully.");
-      //   navigate("/auth");
-      // }
-      // console.log(res);
-
-      // reset();
     } catch (errors) {
       console.log(errors);
     }
   };
   return (
     <div>
-      <Card className="w-[350px] shadow">
+      <Card className="w-full sm:w-[350px] shadow">
         <CardHeader>
           <CardTitle className=" text-center">Sign Up</CardTitle>
         </CardHeader>
@@ -97,7 +88,7 @@ const Register = () => {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="username">Username</Label>
-                <Input {...register("username")} id="username" />
+                <Input {...register("username")} id="username" placeholder="xxxx"/>
                 {errors.username && (
                   <p className="text-red-500">{`${errors.username.message}`}</p>
                 )}

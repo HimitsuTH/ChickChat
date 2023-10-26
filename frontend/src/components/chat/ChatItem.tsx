@@ -18,6 +18,10 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
 
   const { recipient } = useFetchRecipient(chat, user as TUser);
 
+  const checkOnline = onlineUsers?.some(
+    (user) => user?.userId === recipient?.id
+  );
+
   return (
     <NavLink
       to={`/${chat.id}`}
@@ -26,7 +30,7 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
         ` relative ${
           isActive &&
           " bg-gradient-to-r from-indigo-300 to-purple-400 text-white "
-        } text-center p-2 shadow m-2 flex items-center justify-around gap-x-4 cursor-pointer rounded-xl text-black `
+        } text-center p-2 shadow m-2 flex items-center justify-around gap-x-4 cursor-pointer rounded-xl text-black`
       }
     >
       <div className="flex md:items-center gap-x-2 flex-1 ">
@@ -40,16 +44,10 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
         </div>
       </div>
       <div className="  right-5 flex">
-        <p className="block">
-          {onlineUsers?.some((user) => user?.userId === recipient?.id)
-            ? "Online"
-            : "Offline"}
-        </p>
+        <p className="block">{checkOnline ? "Online" : "Offline"}</p>
         <div
           className={`w-[10px] h-[10px] rounded-full border border-gray-500 ${
-            onlineUsers?.some((user) => user.userId === recipient?.id)
-              ? "bg-green-600"
-              : " bg-gray-200"
+            checkOnline ? "bg-green-600" : " bg-gray-200"
           }`}
         />
       </div>

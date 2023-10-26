@@ -1,4 +1,4 @@
-import React, { useRef ,useEffect} from "react";
+import React, { useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import Messages from "../Messages";
@@ -28,28 +28,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import send from "@/assets/send.png";
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 const ChatBox = () => {
   const { user } = useAuth();
-  const { currentChat, createMessage, messages, messageLoading , onlineUsers } = useChat();
+  const { currentChat, createMessage, messages, messageLoading, onlineUsers } =
+    useChat();
   const { recipient } = useFetchRecipient(
     currentChat as TUserChat,
     user as TUser
   );
 
-
   const { register, handleSubmit, reset } = useForm<TSendMessage>({
     resolver: zodResolver(sendMessage),
   });
-
 
   // scroll To Bottom when user send message chat
   const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
     }
   };
 
@@ -59,12 +59,16 @@ const ChatBox = () => {
     if (!text || text === "") return;
     createMessage(user as TUser, text, currentChat as TUserChat);
     reset();
-    scrollToBottom()
+    scrollToBottom();
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+
+  const checkOnline = onlineUsers?.some((user) => user?.userId === recipient?.id)
+
 
   return (
     <Card className="flex-1 bg-white ml-2  h-full shadow-none border-none ">
@@ -75,13 +79,21 @@ const ChatBox = () => {
               <AvatarImage src={userIcon} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <p>{recipient?.username}</p>
+            <div className="flex items-center gap-x-2">
+              <p>{recipient?.username} </p>
+              <p className=" text-sm text-slate-500">{recipient?.email}</p>
+            </div>
           </CardTitle>
-          <CardDescription> {onlineUsers?.some((user) => user?.userId === recipient?.id)
-            ? "Online"
-            : "Offline"}</CardDescription>
+          <CardDescription >
+            {checkOnline
+              ? "Online"
+              : "Offline"}
+          </CardDescription>
         </CardHeader>
-        <CardContent className=" bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll" ref={chatContainerRef}>
+        <CardContent
+          className=" bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll"
+          ref={chatContainerRef}
+        >
           {messageLoading ? (
             <p>loading message...</p>
           ) : (

@@ -5,8 +5,8 @@ const io = new Server({ cors: "http://localhost:5173/" });
 let onlineUsers = [];
 
 io.on("connection", (socket) => {
-  //   console.log("connection", socket.id);
-  //   console.log("online users: ", onlineUsers);
+    // console.log("connection", socket.id);
+    // console.log("online users: ", onlineUsers);
 
   //listen connection
   socket.on("addNewUser", (userId) => {
@@ -24,6 +24,8 @@ io.on("connection", (socket) => {
 
     const user = onlineUsers.find((user) => user.userId === recipientId);
 
+    // console.log(user)
+
     if (user) {
       io.to(user.socketId).emit("getMessage", message);
     }
@@ -38,7 +40,9 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
+    // console.log(onlineUsers)
 
     io.emit("getOnlineUsers", onlineUsers);
   });

@@ -25,6 +25,7 @@ passport.use(
           id: jwt_payload.id,
         },
         select: {
+            id:true,
             username: true,
             email: true,
             password: true

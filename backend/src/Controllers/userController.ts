@@ -8,6 +8,7 @@ const prisma = new PrismaClient();
 import { encryptPassword, comparePassword } from "../service/auth.service";
 
 type TUser = {
+  id: string;
   email: string;
   username: string;
   password: string;
@@ -93,17 +94,17 @@ export const login = async (
         },
         "https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.he0ErCNloe4J7Id0Ry2SEDg09lKkZkfsRiGsdX_vgEg",
         {
-          expiresIn: "5 days",
+          expiresIn: "2 days",
         }
       );
 
-      const expires_in = jwt.decode(token);
+      const expires_in = jwt.decode(token) as jwt.JwtPayload;
 
-      console.log(token);
-
-      console.log(expires_in);
-
-      res.status(200).json(user);
+      res.status(200).json({
+        access_token: token,
+        expires_in: expires_in.exp,
+        token_type: "Bearer",
+      });
     }
   } catch (err) {
     next(err);
@@ -152,10 +153,15 @@ export const profile = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { username, email } = req.user as TUser;
+  const { id, username, email } = req.user as TUser;
 
-  res.status(200).json({
-    username,
-    email,
-  });
+  try {
+    res.status(200).json({
+      id,
+      username,
+      email,
+    });
+  } catch (err) {
+    next(err);
+  }
 };

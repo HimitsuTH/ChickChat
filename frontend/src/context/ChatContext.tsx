@@ -8,7 +8,7 @@ import React, {
   useCallback,
   ReactNode,
 } from "react";
-import { TUser } from "./AuthContext";
+import { TToken, TUser } from "./AuthContext";
 import axios from "axios";
 import { baseUrl } from "@/lib/service";
 
@@ -49,6 +49,7 @@ const ChatContext = createContext<ChatContextType | null>(null);
 export const ChatContextProvider: React.FC<{
   children: ReactNode;
   user: TUser | null;
+  token: TToken | null;
 }> = ({ children, user }) => {
   const [userChats, setUserChats] = useState<TUserChat[]>([]);
   const [newChat, setNewChat] = useState<TUserChat | null>(null);
@@ -65,6 +66,8 @@ export const ChatContextProvider: React.FC<{
   const [newMessage, setNewMessage] = useState<TMessage | null>(null);
   const [messageLoading, setMessageLoading] = useState(false);
   // const [messageError , setMessageError] = useState(null);
+
+  //get socket & get online user
   const [socket, setSocket] = useState<Socket | null>(null);
   const [onlineUsers, setOnlineUsers] = useState(null);
 
@@ -75,7 +78,10 @@ export const ChatContextProvider: React.FC<{
   //@Socket.io
   //===========================================================
   useEffect(() => {
-    const newSocket = io("http://localhost:3000");
+    const newSocket = io("http://localhost:3000", {
+      transports: ["websocket"],
+    });
+    // console.log(newSocket)
     setSocket(newSocket);
 
     return () => {
@@ -88,9 +94,12 @@ export const ChatContextProvider: React.FC<{
     if (socket === null) {
       return;
     }
-    socket?.emit("addNewUser", user?.id);
+    user != null && socket?.emit("addNewUser", user?.id);
+
     socket.on("getOnlineUsers", (res) => {
       setOnlineUsers(res);
+
+      console.log(res);
     });
 
     return () => {
@@ -110,7 +119,6 @@ export const ChatContextProvider: React.FC<{
       socket.emit("createChat", newChat, recipientUser);
     }
     setNewChat(null);
-
 
     //receive get chat
     socket.on("getChat", (res) => {
@@ -149,35 +157,26 @@ export const ChatContextProvider: React.FC<{
 
     //check message is not null IF true `emit` data on event sendMessage
     if (newMessage?.text) {
+      // console.log(newMessage);
       socket.emit("sendMessage", { ...newMessage, ...recipientUser });
       setNewMessage(null);
     }
+  }, [newMessage, socket]);
+
+  useEffect(() => {
+    if (socket === null) return;
 
     //receive message
     socket.on("getMessage", (res) => {
       if (currentChat?.id !== res.chatId) return;
-
+      console.log(res);
       setMessages((prev) => [...prev, res]);
     });
 
     return () => {
       socket.off("getMessage");
     };
-  }, [newMessage, socket]);
-
-  // useEffect(() => {
-  //   if (socket === null) return;
-
-  //   socket.on("getMessage", (res) => {
-  //     if (currentChat?.id !== res.chatId) return;
-
-  //     setMessages((prev) => [...prev, res]);
-  //   });
-
-  //   return () => {
-  //     socket.off("getMessage");
-  //   };
-  // }, [socket, currentChat, newMessage]);
+  }, [socket, currentChat, newMessage]);
 
   // console.log(messages);
   // console.log(user);

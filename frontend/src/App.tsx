@@ -16,7 +16,7 @@ import ChatBox from "./components/chat/ChatBox";
 import ChatMain from "./components/chat/ChatMain";
 
 const App = () => {
-  const { user } = useAuth();
+  const { token, user } = useAuth();
 
   //@credit https://dev.to/sanjayttg/jwt-authentication-in-react-with-react-router-1d03
   // Define public routes accessible to all users
@@ -50,7 +50,7 @@ const App = () => {
               children: [
                 {
                   path: "/",
-                  element: <ChatMain/>
+                  element: <ChatMain />,
                 },
                 {
                   path: "/:chatId",
@@ -99,8 +99,8 @@ const App = () => {
   // Combine and conditionally include routes based on authentication status
   const router = createBrowserRouter([
     ...routesForPublic,
-    ...(user ? routesForAuthenticatedOnly : []),
-    ...(!user ? routesForNotAuthenticatedOnly : []),
+    ...(token ? routesForAuthenticatedOnly : []),
+    ...(!token ? routesForNotAuthenticatedOnly : []),
   ]);
 
   // Provide the router configuration using RouterProvider
