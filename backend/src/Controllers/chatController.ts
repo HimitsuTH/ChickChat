@@ -16,24 +16,33 @@ export const createChat = async (
   //   console.log(firstId, secondId);
 
   try {
+    const user = await prisma.users.findMany({
+      where: {
+        id: {
+          in: [firstId, secondId],
+        },
+      },
+    });
+    // console.log("======================================================")
+    // console.log(user.length)
+
+    // Check if the user exists
+
+    if (user.length < 2) {
+      const error: ResponseError = new Error("Some users are missing.");
+      error.statusCode = 401;
+      throw error;
+    }
+
     const chatIsExist = await prisma.chat.findFirst({
       where: {
-        AND: [
-          {
-            members: {
-              some: {
-                userId: firstId,
-              },
+        members: {
+          some: {
+            userId: {
+              in: [firstId, secondId],
             },
           },
-          {
-            members: {
-              some: {
-                userId: secondId,
-              },
-            },
-          },
-        ],
+        },
       },
     });
 
@@ -50,9 +59,8 @@ export const createChat = async (
         },
       },
       include: {
-        members: true
-      }
-      ,
+        members: true,
+      },
     });
     res.status(200).json(chatBox);
   } catch (err) {
@@ -96,38 +104,25 @@ export const findChat = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { firstId, secondId } = req.params;
+  const { chatId } = req.params;
 
   try {
     const chatBox = await prisma.chat.findFirst({
       where: {
-        AND: [
-          {
-            members: {
-              some: {
-                userId: firstId,
-              },
-            },
-          },
-          {
-            members: {
-              some: {
-                userId: secondId,
-              },
-            },
-          },
-        ],
+        id: chatId,
+      },
+      include: {
+        members: true,
       },
     });
 
-    if(!chatBox){
-        const error:ResponseError = new Error("Chat box not founded.");
-        error.statusCode = 400
-        throw error
+    if (!chatBox) {
+      const error: ResponseError = new Error("Chat box not founded.");
+      error.statusCode = 400;
+      throw error;
     }
 
-    res.status(200).json(chatBox)
-
+    res.status(200).json(chatBox);
   } catch (err) {
     next(err);
   }

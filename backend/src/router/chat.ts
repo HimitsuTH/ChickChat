@@ -4,6 +4,6 @@ import { createChat, findUserChats, findChat } from "../Controllers/chatControll
 
 router.post("/", createChat);
 router.get("/user/:id", findUserChats);
-router.get("/?fid=:firstId&?sid=:secondId", findChat);
+router.get("/chatId=:chatId", findChat);
 
 export default router;
