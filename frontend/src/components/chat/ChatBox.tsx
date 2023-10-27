@@ -29,6 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import send from "@/assets/send.png";
 
 import { v4 as uuidv4 } from "uuid";
+import { Link } from "react-router-dom";
 
 const ChatBox = () => {
   const { user } = useAuth();
@@ -66,70 +67,82 @@ const ChatBox = () => {
     scrollToBottom();
   }, [messages]);
 
-
-  const checkOnline = onlineUsers?.some((user) => user?.userId === recipient?.id)
-
+  const checkOnline = onlineUsers?.some(
+    (user) => user?.userId === recipient?.id
+  );
 
   return (
     <Card className="flex-1 bg-white ml-2  h-full shadow-none border-none ">
-      <div className=" flex flex-col  h-full justify-between px-4 gap-2">
-        <CardHeader className="">
-          <CardTitle className=" flex gap-x-4">
-            <Avatar className=" h-8 w-8">
-              <AvatarImage src={userIcon} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-            <div className="flex items-center gap-x-2">
-              <p>{recipient?.username} </p>
-              <p className=" text-sm text-slate-500">{recipient?.email}</p>
-            </div>
-          </CardTitle>
-          <CardDescription >
-            {checkOnline
-              ? "Online"
-              : "Offline"}
-          </CardDescription>
-        </CardHeader>
-        <CardContent
-          className=" bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll"
-          ref={chatContainerRef}
-        >
-          {messageLoading ? (
-            <p>loading message...</p>
-          ) : (
-            <div className=" flex flex-col  justify-end  gap-y-2">
-              <p className=" flex justify-center items-center p-2">
-                New message
-              </p>
-              {messages.map((message) => (
-                <div
-                  key={`${uuidv4()}`}
-                  className={`flex ${
-                    message.senderId == user?.id && " justify-end"
-                  }`}
-                >
-                  <Messages message={message} />
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-        <CardFooter className=" ">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className=" flex gap-x-5  justify-end items-center w-full"
+      {recipient !== null ? (
+        <div className=" flex flex-col  h-full justify-between px-4 gap-2">
+          <CardHeader className="">
+            <CardTitle className=" flex gap-x-4">
+              <Avatar className=" h-8 w-8">
+                <AvatarImage src={userIcon} />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <div className="flex items-center gap-x-2">
+                <p>{recipient?.username} </p>
+                <p className=" text-sm text-slate-500">{recipient?.email}</p>
+              </div>
+            </CardTitle>
+            <CardDescription>
+              {checkOnline ? "Online" : "Offline"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent
+            className=" bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll"
+            ref={chatContainerRef}
           >
-            <Input
-              {...register("text")}
-              placeholder="Message..."
-              className=" w-full"
-            />
-            <Button type="submit" className="flex justify-center items-center">
-              <img alt="send" src={send} className="h-6 w-6" />
-            </Button>
-          </form>
-        </CardFooter>
-      </div>
+            {messageLoading ? (
+              <p>loading message...</p>
+            ) : (
+              <div className=" flex flex-col  justify-end  gap-y-2">
+                <p className=" flex justify-center items-center p-2">
+                  New message
+                </p>
+                {messages.map((message) => (
+                  <div
+                    key={`${uuidv4()}`}
+                    className={`flex ${
+                      message.senderId == user?.id && " justify-end"
+                    }`}
+                  >
+                    <Messages message={message} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+          <CardFooter className=" ">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className=" flex gap-x-5  justify-end items-center w-full"
+            >
+              <Input
+                {...register("text")}
+                placeholder="Message..."
+                className=" w-full"
+              />
+              <Button
+                type="submit"
+                className="flex justify-center items-center"
+              >
+                <img alt="send" src={send} className="h-6 w-6" />
+              </Button>
+            </form>
+          </CardFooter>
+        </div>
+      ) : (
+        <div className=" grid h-full place-items-center">
+          <div className="flex justify-center flex-col items-center">
+            <h1 className="mb-5">Chat not found</h1>
+            <Link to={"/"}>
+              <Button>Back</Button>
+            </Link>
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

@@ -8,6 +8,7 @@ import ChatList from "./ChatList";
 export const Index = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+
   return (
     <main className=" flex-row justify-between mt-2 h-5/6 md:h-5/6 md:flex  p-0 md:p-4  ">
       <button
@@ -21,7 +22,7 @@ export const Index = () => {
           <Icons.arrowLeft className=" h-5 w-5" />
         )}
       </button>
-      <ChatList isOpen={isOpen} />
+      <ChatList isOpen={isOpen} handleMenuOpen={setIsOpen}/>
       <Outlet />
     </main>
   );

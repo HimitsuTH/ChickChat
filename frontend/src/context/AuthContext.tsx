@@ -17,7 +17,7 @@ import { UseFormSetError, UseFormReset } from "react-hook-form";
 
 import authHeader from "@/lib/service";
 
-export interface TToken  {
+export interface TToken {
   token_type: string;
   access_token: string;
   expires_in: number;
@@ -75,7 +75,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
       setToken(res.data);
       localStorage.setItem("token", JSON.stringify(res?.data));
-    
 
       navigate("/");
       reset();
@@ -125,6 +124,18 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
     const getUserInfo = async () => {
       try {
         if (token != null) {
+          // set expires_in token
+          const now = new Date().getTime();
+          const expires_in: number = parseInt(String(token?.expires_in)) || 0;
+          const expiryTime = expires_in * 1000;
+
+          if (expiryTime < now || token == null) {
+            setUser(null);
+            localStorage.removeItem("user");
+            setToken(null);
+            localStorage.removeItem("token");
+          }
+
           const res = await axios.get(`${baseUrl}/user/me`, {
             headers: authHeader(token),
           });

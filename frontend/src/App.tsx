@@ -105,7 +105,7 @@ const App = () => {
 
   // Provide the router configuration using RouterProvider
   return (
-    <ChatContextProvider user={user}>
+    <ChatContextProvider user={user} token={token}>
       <RouterProvider router={router} />
     </ChatContextProvider>
   );

@@ -10,7 +10,7 @@ import { useFetchRecipient } from "@/hooks/useFetchRecipient";
 
 import { NavLink } from "react-router-dom";
 
-const ChatItem = ({ chat }: { chat: TUserChat }) => {
+const ChatItem = ({ chat, handleMenuOpen }: { chat: TUserChat,  handleMenuOpen: (e:boolean)=> void  }) => {
   const { user } = useAuth();
   const { getCurrentChat, onlineUsers } = useChat();
 
@@ -25,7 +25,11 @@ const ChatItem = ({ chat }: { chat: TUserChat }) => {
   return (
     <NavLink
       to={`/${chat.id}`}
-      onClick={() => getCurrentChat(chat)}
+      onClick={() => {
+        getCurrentChat(chat)
+        handleMenuOpen(false)
+      }
+      }
       className={({ isActive }: { isActive: boolean }) =>
         ` relative ${
           isActive &&

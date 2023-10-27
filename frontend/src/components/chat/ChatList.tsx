@@ -5,7 +5,7 @@ import { useChat } from "@/context/ChatContext";
 import { Skeleton } from "@/components/ui/skeleton";
 // import { useAuth } from "@/context/AuthContext";
 
-const ChatList = ({ isOpen }: { isOpen: boolean }) => {
+const ChatList = ({ isOpen,handleMenuOpen }: { isOpen: boolean, handleMenuOpen: (e:boolean)=> void }) => {
   // const [isOpen, setIsOpen] = useState(false);
   const { userChats, uLoading } = useChat();
 
@@ -28,7 +28,7 @@ const ChatList = ({ isOpen }: { isOpen: boolean }) => {
         </div>
       ) : userChats.length > 0 ? (
         userChats.map((chat) => {
-          return <ChatItem chat={chat} key={chat.id} />;
+          return <ChatItem chat={chat} key={chat.id} handleMenuOpen={handleMenuOpen} />;
         })
       ) : (
         <p className=" text-center m-4 font-semibold">No chat</p>
