@@ -25,6 +25,8 @@
 
     DATABASE_URL="{Server}://root@localhost:{port}/{database name}"
 
-    JWT_KEY="{Jwt key} you can find key on https://jwt.io/"
+    JWT_KEY="{Jwt key} You can find secure keys on random key generator websites."
+
+    # Verified https://jwt.io/
 
 ```
