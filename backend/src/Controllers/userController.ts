@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import jwt from "jsonwebtoken";
+import config from "../config/index";
 
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
@@ -92,7 +93,7 @@ export const login = async (
         {
           id: user.id,
         },
-        "https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.he0ErCNloe4J7Id0Ry2SEDg09lKkZkfsRiGsdX_vgEg",
+        config.JWT_KEY,
         {
           expiresIn: "2 days",
         }

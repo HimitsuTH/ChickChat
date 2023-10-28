@@ -3,12 +3,16 @@ import passport from "passport";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+import config from "../config/index"
+
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
+
+// console.log(config.JWT_KEY)
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey:
-    "https://jwt.io/#debugger-io?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.he0ErCNloe4J7Id0Ry2SEDg09lKkZkfsRiGsdX_vgEg",
+  config.JWT_KEY,
 };
 
 type TUser = {
@@ -25,11 +29,11 @@ passport.use(
           id: jwt_payload.id,
         },
         select: {
-            id:true,
-            username: true,
-            email: true,
-            password: true
-        }
+          id: true,
+          username: true,
+          email: true,
+          password: true,
+        },
       });
       if (!user) {
         return done(new Error("User not found."), false);
