@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
@@ -28,7 +29,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import send from "@/assets/send.png";
 
-import { v4 as uuidv4 } from "uuid";
 import { Link } from "react-router-dom";
 
 const ChatBox = () => {
@@ -94,25 +94,32 @@ const ChatBox = () => {
             className=" bg-slate-50  p-4 rounded overflow-x-hidden h-4/6 overflow-y-scroll"
             ref={chatContainerRef}
           >
-            {messageLoading ? (
-              <p>loading message...</p>
-            ) : (
-              <div className=" flex flex-col  justify-end  gap-y-2">
-                <p className=" flex justify-center items-center p-2">
-                  New message
-                </p>
-                {messages.map((message) => (
-                  <div
-                    key={`${uuidv4()}`}
-                    className={`flex ${
-                      message.senderId == user?.id && " justify-end"
-                    }`}
-                  >
-                    <Messages message={message} />
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className=" flex flex-col  gap-y-2 ">
+              {messageLoading ? (
+                <>
+                  <Skeleton className="w-[200px] h-[40px] " />
+                  <Skeleton className="w-[200px] h-[40px] " />
+                  <Skeleton className="w-[200px] h-[40px] " />
+                  <Skeleton className="w-[200px] h-[40px] " />
+                </>
+              ) : (
+                <>
+                  <p className=" flex justify-center items-center p-2">
+                    New message
+                  </p>
+                  {messages.map((message, i) => (
+                    <div
+                      key={`${i}+${message.createdAt}`}
+                      className={`flex ${
+                        message.senderId == user?.id && " justify-end "
+                      }`}
+                    >
+                      <Messages message={message} />
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
           </CardContent>
           <CardFooter className=" ">
             <form

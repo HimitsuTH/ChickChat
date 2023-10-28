@@ -74,6 +74,9 @@ export const ChatContextProvider: React.FC<{
   // console.log(socket);
   // console.log(onlineUsers);
 
+
+ 
+
   //===========================================================
   //@Socket.io
   //===========================================================
@@ -89,6 +92,24 @@ export const ChatContextProvider: React.FC<{
     };
   }, [user]);
 
+  // const getOnline = () => {
+  //   if (socket === null) {
+  //     return;
+  //   }
+  //   user != null && socket?.emit("addNewUser", user?.id);
+
+  //   socket.on("getOnlineUsers", (res) => {
+  //     setOnlineUsers(res);
+  //     console.log("?")
+  //   });
+
+
+  //   return () => {
+  //     if (!socket) return;
+  //     socket.off("getOnlineUsers");
+  //   };
+  // };
+
   // add online users
   useEffect(() => {
     if (socket === null) {
@@ -99,24 +120,26 @@ export const ChatContextProvider: React.FC<{
     socket.on("getOnlineUsers", (res) => {
       setOnlineUsers(res);
 
-      console.log(res);
+      console.log("??");
     });
 
     return () => {
+      if (!socket) return;
       socket.off("getOnlineUsers");
     };
+    // getOnline();
   }, [socket, user]);
 
   // send create new chat for update receive Chat
   useEffect(() => {
     if (socket === null) return;
 
-    const recipientUser = newChat?.members?.find(
+    const recipient = newChat?.members?.find(
       (member) => member.userId !== user?.id
     );
 
     if (newChat !== null) {
-      socket.emit("createChat", newChat, recipientUser);
+      socket.emit("createChat", newChat, recipient);
     }
     setNewChat(null);
 
@@ -169,11 +192,11 @@ export const ChatContextProvider: React.FC<{
     //receive message
     socket.on("getMessage", (res) => {
       if (currentChat?.id !== res.chatId) return;
-      console.log(res);
       setMessages((prev) => [...prev, res]);
     });
 
     return () => {
+      if (!socket) return;
       socket.off("getMessage");
     };
   }, [socket, currentChat, newMessage]);
