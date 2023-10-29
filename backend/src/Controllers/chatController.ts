@@ -37,7 +37,7 @@ export const createChat = async (
     const chatIsExist = await prisma.chat.findFirst({
       where: {
         members: {
-          some: {
+          every: {
             userId: {
               in: [firstId, secondId],
             },
