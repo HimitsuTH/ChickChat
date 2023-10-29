@@ -1,14 +1,13 @@
-import React from 'react'
+import React from "react";
 
-import { Outlet } from 'react-router-dom'
-
+import { Outlet } from "react-router-dom";
 
 export const Index = () => {
   return (
-    <div className='grid h-screen place-items-center bg-gradient-to-r from-indigo-300 to-purple-400'>
-        <Outlet/>
+    <div className="grid h-screen items-center min-[420px]:justify-center bg-gradient-to-r from-indigo-300 to-purple-400">
+      <div className="mx-2">
+        <Outlet />
+      </div>
     </div>
-  )
-}
-
- 
+  );
+};

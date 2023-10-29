@@ -21,7 +21,7 @@ const Messages: React.FC<MessagesProps> = ({ message }) => {
   const { user } = useAuth();
 
   return (
-    <div className={`flex  max-w-[50%]`}>
+    <div className={`flex  max-w-[50%] text-sm md:text-base`}>
       <HoverCard>
         <HoverCardTrigger>
           <div

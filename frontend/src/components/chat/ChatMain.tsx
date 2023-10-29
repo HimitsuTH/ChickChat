@@ -19,13 +19,13 @@ const ChatMain = () => {
   const { potentialChat, createChat, onlineUsers } = useChat();
   const { user } = useAuth();
   return (
-    <Card className="flex-1 bg-white ml-2 h-full  rounded overflow-scroll  md:overflow-auto  shadow-none border-none">
+    <Card className="flex-1 bg-white ml-2 h-full  rounded overflow-y-scroll  md:overflow-auto  shadow-none border-none">
       <CardHeader className="flex justify-center items-center text-center">
         <CardTitle> Welcome To ChickChat</CardTitle>
         <CardDescription>Chat Application</CardDescription>
       </CardHeader>
       <div className=" flex  mx-5 justify-start ">
-        <CardContent>
+        <CardContent className=" ">
           <h2 className=" font-semibold m-2">Add Friends</h2>
           <div className=" flex  gap-4 flex-wrap justify-center ">
             {potentialChat.length > 0 ? (
@@ -53,7 +53,7 @@ const ChatMain = () => {
                     <Button
                       variant="default"
                       onClick={() =>
-                        createChat(user?.id as string, p.id as string)
+                        createChat(user?.id as string, p?.id as string)
                       }
                     >
                       Add
