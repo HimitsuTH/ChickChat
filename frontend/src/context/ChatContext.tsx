@@ -12,6 +12,8 @@ import { TToken, TUser } from "./AuthContext";
 import axios from "axios";
 import { baseUrl } from "@/lib/service";
 
+import { NavigateFunction } from "react-router-dom";
+
 import { io, Socket } from "socket.io-client";
 
 export type TUserChat = {
@@ -40,7 +42,7 @@ interface ChatContextType {
   messageLoading: boolean;
   onlineUsers: TOnlineUsers[] | null;
   getCurrentChat: (chat: TUserChat | null) => void;
-  createChat: (firstId: string, secondId: string) => void;
+  createChat: (firstId: string, secondId: string, navigate: NavigateFunction) => void;
   createMessage: (senderId: TUser, text: string, chat: TUserChat) => void;
 }
 
@@ -208,15 +210,18 @@ export const ChatContextProvider: React.FC<{
   //@Chat
   //===========================================================
   //Create Chat
-  const createChat = useCallback(async (userId: string, recipientId: string) => {
+  const createChat = useCallback(async (userId: string, recipientId: string,navigate: NavigateFunction) => {
     try {
       const res = await axios.post(`${baseUrl}/chat`, {
         userId,
         recipientId,
       });
       const chat: TUserChat = res.data;
+      navigate(`/${chat.id}`)
 
       setNewChat(chat);
+      setCurrentChat(chat);
+
       setUserChats((prevChats) => [...prevChats, chat]);
     } catch (err) {
       console.error("Error creating chat:", err);
