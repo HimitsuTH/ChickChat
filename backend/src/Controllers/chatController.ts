@@ -12,23 +12,20 @@ export const createChat = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { firstId, secondId } = req.body;
+  const { userId, recipientId } = req.body;
   //   console.log(firstId, secondId);
 
   try {
-    const user = await prisma.users.findMany({
+    const exitsUser = await prisma.users.findMany({
       where: {
         id: {
-          in: [firstId, secondId],
+          in: [userId, recipientId],
         },
       },
     });
     // console.log("======================================================")
-    // console.log(user.length)
-
     // Check if the user exists
-
-    if (user.length < 2) {
+    if (exitsUser.length < 2) {
       const error: ResponseError = new Error("Some users are missing.");
       error.statusCode = 401;
       throw error;
@@ -39,7 +36,7 @@ export const createChat = async (
         members: {
           every: {
             userId: {
-              in: [firstId, secondId],
+              in: [userId, recipientId],
             },
           },
         },
@@ -55,13 +52,14 @@ export const createChat = async (
     const chatBox = await prisma.chat.create({
       data: {
         members: {
-          create: [{ userId: firstId }, { userId: secondId }],
+          create: [{ userId: userId }, { userId: recipientId }],
         },
       },
       include: {
         members: true,
       },
     });
+
     res.status(200).json(chatBox);
   } catch (err) {
     next(err);

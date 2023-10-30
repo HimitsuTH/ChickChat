@@ -3,7 +3,7 @@ import passport from "passport";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-import config from "../config/index"
+import config from "../config/index";
 
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
@@ -11,14 +11,7 @@ import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey:
-  config.JWT_KEY,
-};
-
-type TUser = {
-  id: string;
-  email: string;
-  username: string;
+  secretOrKey: config.JWT_KEY,
 };
 
 passport.use(
@@ -33,6 +26,11 @@ passport.use(
           username: true,
           email: true,
           password: true,
+          friends: {
+            select: {
+              friendId: true,
+            },
+          },
         },
       });
       if (!user) {

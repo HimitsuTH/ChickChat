@@ -42,19 +42,30 @@ export const register = async (
       error.field = "email";
       error.statusCode = 400;
       throw error;
-    } else {
-      const hashPassword = await encryptPassword(password);
-
-      await prisma.users.create({
-        data: {
-          email,
-          username,
-          password: hashPassword,
-        },
-      });
-
-      res.status(201).send("Register successfully.");
     }
+
+    const existUsername = await prisma.users.findFirst({
+      where: { username: username },
+    });
+
+    if (existUsername) {
+      const error: ResponseError = new Error("Username has already exist.");
+      error.field = "username";
+      error.statusCode = 400;
+      throw error;
+    }
+
+    const hashPassword = await encryptPassword(password);
+
+    await prisma.users.create({
+      data: {
+        email,
+        username,
+        password: hashPassword,
+      },
+    });
+
+    res.status(201).send("Register successfully.");
   } catch (err) {
     next(err);
   }
@@ -154,14 +165,61 @@ export const profile = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { id, username, email } = req.user as TUser;
+  const user = req.user as TUser;
 
   try {
     res.status(200).json({
-      id,
-      username,
-      email,
+      user,
     });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const addFriend = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId, recipientId } = req.body;
+    const existFriend = await prisma.friend.findFirst({
+      where: {
+        userId,
+        friendId: recipientId,
+      },
+    });
+
+    if (existFriend) {
+      const error: ResponseError = new Error("This user is a friend.");
+      error.statusCode = 404;
+      throw error;
+    }
+    const exitsUser = await prisma.users.findMany({
+      where: {
+        id: {
+          in: [userId, recipientId],
+        },
+      },
+    });
+    // Check if the user exists
+    if (exitsUser.length < 2) {
+      const error: ResponseError = new Error("Some users are missing.");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const friend = await prisma.friend.create({
+      data: {
+        userId: userId,
+        friendId: recipientId
+      }
+    })
+
+    console.log(friend);
+
+
+
   } catch (err) {
     next(err);
   }

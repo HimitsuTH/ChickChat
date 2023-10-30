@@ -8,25 +8,35 @@
     # Install dependencies
     $ npm install
 
-    # setup database (if your want to edit)
-    $ npx prisma migrate dev -name init
-
-    # push schema on database
-    $ npx prisma db push
-
     # Run
     $ npm start
+
+```
+
+## Prisma
+
+```
+
+    # Create migrations from your Prisma schema, apply them to the database, generate artifacts (e.g. Prisma Client)
+    $ prisma migrate dev
+
+    # Pull the schema from an existing database, updating the Prisma schema
+    $ prisma db pull
+
+    # Push the Prisma schema state to the database
+    $ prisma db push
 
 ```
 
 ## .env
 
 ```
+     # https://jwt.io/
 
-    DATABASE_URL="{Server}://root@localhost:{port}/{database name}"
+    $ DATABASE_URL="{Server}://root@localhost:{port}/{database name}"
 
-    JWT_KEY="{Jwt key} You can find secure keys on random key generator websites."
+    $ JWT_KEY="{Jwt key} You can find secure keys on random key generator websites."
 
-    # Verified https://jwt.io/
+  
 
 ```
