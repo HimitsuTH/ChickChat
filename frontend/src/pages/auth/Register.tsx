@@ -40,12 +40,6 @@ const Register = () => {
 
   const onSubmit = async (body: TSignUpSchema) => {
     const { username, email, password } = body;
-    // if (password === "") {
-    //   setError("password", {
-    //     message: "Please enter your password.",
-    //   });
-    //   return;
-    // }
 
     if (username === "") {
       setError("username", {
@@ -88,7 +82,11 @@ const Register = () => {
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="username">Username</Label>
-                <Input {...register("username")} id="username" placeholder="xxxx"/>
+                <Input
+                  {...register("username")}
+                  id="username"
+                  placeholder="xxxx"
+                />
                 {errors.username && (
                   <p className="text-red-500">{`${errors.username.message}`}</p>
                 )}

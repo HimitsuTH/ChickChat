@@ -139,8 +139,9 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
           const res = await axios.get(`${baseUrl}/user/me`, {
             headers: authHeader(token),
           });
+          console.log(res);
 
-          const user = res.data;
+          const user = res.data.user;
           localStorage.setItem("user", JSON.stringify(user));
 
           setUser(user);

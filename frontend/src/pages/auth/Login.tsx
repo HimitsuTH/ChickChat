@@ -65,11 +65,11 @@ const Login = () => {
         </CardHeader>
         <CardContent className="grid gap-4">
           <div className="grid grid-cols-2 gap-6">
-            <Button variant="outline">
+            <Button variant="outline" disabled={true}>
               <Icons.gitHub className="mr-2 h-4 w-4" />
               Github
             </Button>
-            <Button variant="outline">
+            <Button variant="outline" disabled={true}>
               <Icons.google className="mr-2 h-4 w-4" />
               Google
             </Button>

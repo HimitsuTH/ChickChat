@@ -208,11 +208,11 @@ export const ChatContextProvider: React.FC<{
   //@Chat
   //===========================================================
   //Create Chat
-  const createChat = useCallback(async (firstId: string, secondId: string) => {
+  const createChat = useCallback(async (userId: string, recipientId: string) => {
     try {
       const res = await axios.post(`${baseUrl}/chat`, {
-        firstId,
-        secondId,
+        userId,
+        recipientId,
       });
       const chat: TUserChat = res.data;
 

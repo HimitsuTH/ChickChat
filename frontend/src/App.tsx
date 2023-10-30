@@ -61,7 +61,7 @@ const App = () => {
             {
               path: "/profile",
               element: (
-                <div className=" bg-white mt-2 h-full grid place-items-center">
+                <div className=" bg-white m-5 h-5/6 grid place-items-center rounded-md">
                   User Profile
                 </div>
               ),
