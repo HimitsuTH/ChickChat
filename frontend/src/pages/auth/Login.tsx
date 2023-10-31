@@ -59,7 +59,7 @@ const Login = () => {
 
   return (
     <div>
-      <Card className="w-full sm:w-[350px] shadow">
+      <Card className="w-full  min-[420px]:w-[350px]  shadow">
         <CardHeader>
           <CardTitle className=" text-center">Sign In</CardTitle>
         </CardHeader>

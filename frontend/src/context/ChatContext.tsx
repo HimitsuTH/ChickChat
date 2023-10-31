@@ -42,7 +42,11 @@ interface ChatContextType {
   messageLoading: boolean;
   onlineUsers: TOnlineUsers[] | null;
   getCurrentChat: (chat: TUserChat | null) => void;
-  createChat: (firstId: string, secondId: string, navigate: NavigateFunction) => void;
+  createChat: (
+    firstId: string,
+    secondId: string,
+    navigate: NavigateFunction
+  ) => void;
   createMessage: (senderId: TUser, text: string, chat: TUserChat) => void;
 }
 
@@ -76,9 +80,6 @@ export const ChatContextProvider: React.FC<{
   // console.log(socket);
   // console.log(onlineUsers);
 
-
- 
-
   //===========================================================
   //@Socket.io
   //===========================================================
@@ -104,7 +105,6 @@ export const ChatContextProvider: React.FC<{
   //     setOnlineUsers(res);
   //     console.log("?")
   //   });
-
 
   //   return () => {
   //     if (!socket) return;
@@ -210,23 +210,26 @@ export const ChatContextProvider: React.FC<{
   //@Chat
   //===========================================================
   //Create Chat
-  const createChat = useCallback(async (userId: string, recipientId: string,navigate: NavigateFunction) => {
-    try {
-      const res = await axios.post(`${baseUrl}/chat`, {
-        userId,
-        recipientId,
-      });
-      const chat: TUserChat = res.data;
-      navigate(`/${chat.id}`)
+  const createChat = useCallback(
+    async (userId: string, recipientId: string, navigate: NavigateFunction) => {
+      try {
+        const res = await axios.post(`${baseUrl}/chat`, {
+          userId,
+          recipientId,
+        });
+        const chat: TUserChat = res.data;
+        navigate(`/${chat.id}`);
 
-      setNewChat(chat);
-      setCurrentChat(chat);
+        setNewChat(chat);
+        setCurrentChat(chat);
 
-      setUserChats((prevChats) => [...prevChats, chat]);
-    } catch (err) {
-      console.error("Error creating chat:", err);
-    }
-  }, []);
+        setUserChats((prevChats) => [...prevChats, chat]);
+      } catch (err) {
+        console.error("Error creating chat:", err);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const getUserChat = async () => {

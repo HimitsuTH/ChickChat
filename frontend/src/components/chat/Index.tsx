@@ -10,7 +10,7 @@ export const Index = () => {
 
 
   return (
-    <main className=" flex-row justify-between mt-2 h-5/6 md:h-5/6 md:flex  p-0 md:p-4  ">
+    <main className=" flex-row justify-between mt-2 h-5/6 md:h-5/6 md:flex  p-0 md:p-4 ">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`flex justify-center items-center md:hidden bg-slate-300 hover:bg-slate-800 transition-color 

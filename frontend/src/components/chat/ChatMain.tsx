@@ -25,15 +25,15 @@ const ChatMain = () => {
   const navigate: NavigateFunction = useNavigate();
 
   return (
-    <Card className="flex-1 bg-white ml-2 h-full  rounded overflow-y-scroll  md:overflow-auto  shadow-none border-none">
+    <Card className="flex-1 bg-white ml-2 h-full  rounded overflow-y-scroll overflow-x-hidden  shadow-none border-none">
       <CardHeader className="flex justify-center items-center text-center">
         <CardTitle> Welcome To ChickChat</CardTitle>
         <CardDescription>Chat Application</CardDescription>
       </CardHeader>
-      <div className=" flex  mx-5 justify-start ">
-        <CardContent className=" ">
-          <h2 className=" font-semibold m-2">Add Chats & Friends</h2>
-          <div className=" flex  gap-4 flex-wrap justify-center ">
+      <div className=" flex  w-full ">
+        <CardContent className=" flex flex-col">
+          <h2 className=" font-semibold m-2">Add Chats </h2>
+          <div className="flex  gap-4 flex-wrap  ml-0 justify-center md:justify-normal md:ml-14">
             {potentialChat.length > 0 ? (
               potentialChat.map((p: TUser) => (
                 <Card className=" p-2 relative" key={p.email + "1"}>
@@ -60,7 +60,11 @@ const ChatMain = () => {
                     <Button
                       variant="outline"
                       onClick={() =>
-                        createChat(user?.id as string, p?.id as string,navigate)
+                        createChat(
+                          user?.id as string,
+                          p?.id as string,
+                          navigate
+                        )
                       }
                     >
                       <Icons.message className=" h-5 w-5" />
@@ -68,8 +72,9 @@ const ChatMain = () => {
                     <Button
                       variant="outline"
                       onClick={() => console.log("ADD")}
+                      className=" text-xs"
                     >
-                      Add+
+                       <Icons.addFriend className=" h-5 w-5" />
                     </Button>
                   </CardFooter>
                 </Card>

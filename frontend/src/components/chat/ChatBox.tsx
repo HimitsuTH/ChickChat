@@ -77,6 +77,7 @@ const ChatBox = () => {
         <div className=" flex flex-col  h-full justify-between px-4 gap-2">
           <CardHeader className="">
             <CardTitle className=" flex gap-x-4">
+              <>
               <Avatar className=" h-8 w-8">
                 <AvatarImage src={userIcon} />
                 <AvatarFallback>CN</AvatarFallback>
@@ -85,6 +86,8 @@ const ChatBox = () => {
                 <p>{recipient?.username} </p>
                 <p className=" text-sm text-slate-500">{recipient?.email}</p>
               </div>
+              </>
+              <Button variant="outline">Add Friend</Button>
             </CardTitle>
             <CardDescription>
               {checkOnline ? "Online" : "Offline"}
