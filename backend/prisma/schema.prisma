@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -44,9 +44,9 @@ model Message {
 }
 
 model Friend {
-  id     Int    @id @default(autoincrement())
-  user   Users  @relation(fields: [userId], references: [id])
-  userId String
-  friendId String
+  id         Int      @id @default(autoincrement())
+  user       Users    @relation(fields: [userId], references: [id])
+  userId     String
+  friendId   String
   friendedAt DateTime @default(now()) @db.Timestamp(6)
 }
